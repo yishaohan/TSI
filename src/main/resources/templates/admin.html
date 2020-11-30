@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link rel="stylesheet" href="../static/bootstrap/css/style.css" th:href="@{bootstrap/css/style.css}">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{bootstrap/css/bootstrap.css}">
+</head>
+<body>
+    <div class="container bg-light p-5">
+        <div class="row text-center">
+            <h1>Vote Progress</h1>
+        </div>
+        <div class="row">
+            <ul class="list-group w-100">
+                <li th:each="contestant, stat : ${contestants}" class="list-group-item mb-2">
+                    <span th:text="${contestant.getName() + ' '}"></span>
+                    <span th:text="${contestant.getBallotCount() + ' votes'}" class="text-info"></span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                             th:style="|width: ${1.0 * contestant.getBallotCount() / sum * 100}%;|"
+                             th:text="|${#numbers.formatInteger((1.0 * contestant.getBallotCount() / sum * 100),1)}%|"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
