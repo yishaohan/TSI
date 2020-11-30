@@ -1,10 +1,12 @@
 package com.ysh.talentshowintro.controller;
 
+import com.ysh.talentshowintro.model.Order;
 import com.ysh.talentshowintro.service.ContestantService;
 import com.ysh.talentshowintro.service.EmailService;
 import com.ysh.talentshowintro.service.OrderService;
 import com.ysh.talentshowintro.service.TicketService;
 import com.ysh.talentshowintro.model.Contestant;
+import com.ysh.talentshowintro.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class Router {
@@ -96,7 +100,50 @@ public class Router {
 
     @GetMapping("/captureOrder")
     public void captureOrder(HttpServletRequest req, HttpServletResponse resp) {
-        orderService.captureOrder(req.getParameter("id"));
+        final Enumeration<String> names = req.getParameterNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+            System.out.println(name + " -> " + req.getParameter(name));
+        }
+        Order order = new Order();
+        order.setOrderID(StringUtils.isNull(req.getParameter("id")));
+        order.setIntent(StringUtils.isNull(req.getParameter("intent")));
+        order.setStatus(StringUtils.isNull(req.getParameter("status")));
+        String cdt = StringUtils.isNull(req.getParameter("createTime"));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Timestamp createDateTime = null;
+        try {
+//            createDateTime = (Timestamp) df.parse(cdt);
+            createDateTime = new Timestamp(df.parse(cdt).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        order.setCreateDateTime(createDateTime);
+        String ut = StringUtils.isNull(req.getParameter("updateTime"));
+        Timestamp updateDateTime = null;
+        try {
+//            updateDateTime = (Timestamp) df.parse(ut);
+            updateDateTime = new Timestamp(df.parse(ut).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        order.setUpdateDateTime(updateDateTime);
+        order.setPayerID(StringUtils.isNull(req.getParameter("payerID")));
+        order.setPayerGivenName(StringUtils.isNull(req.getParameter("payerGivenName")));
+        order.setPayerSurname(StringUtils.isNull(req.getParameter("payerSurname")));
+        order.setPayerEmail(StringUtils.isNull(req.getParameter("payerEmail")));
+        orderService.save(order);
+        try {
+            resp.sendRedirect("/");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping("/orderCancel")
+    public void orderCancel(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println(req.getParameter("message"));
         try {
             resp.sendRedirect("/");
         } catch (IOException e) {

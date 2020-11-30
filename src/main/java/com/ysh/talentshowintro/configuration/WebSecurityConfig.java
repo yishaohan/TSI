@@ -1,5 +1,6 @@
 package com.ysh.talentshowintro.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -12,6 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${server.port}")
+    private int httpsPort;
+    @Value("${http.port}")
+    private int httpPort;
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
@@ -27,6 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.portMapper().http(httpPort).mapsTo(httpsPort);
+        http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
+
         http.authorizeRequests()
                 .antMatchers("/admin/**")
                 .hasRole("user")
