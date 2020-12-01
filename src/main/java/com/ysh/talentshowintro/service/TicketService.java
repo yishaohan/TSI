@@ -19,8 +19,8 @@ public class TicketService {
         Ticket ticket = new Ticket();
         ticket.setEmail(email);
         Random random = new Random();
-        String num = Integer.toHexString(random.nextInt());
-        num = num.substring(0, 6);
+        String num = Integer.toString(random.nextInt());
+        num = num.substring(1, 7);
         ticket.setNumber(num);
         System.out.println(num);
         ticketMapper.save(ticket);
@@ -33,6 +33,18 @@ public class TicketService {
 
     public void deleteTicket(String number) {
         ticketMapper.deleteTicket(number);
+    }
+
+    public int getNum() {
+        return ticketMapper.getNum();
+    }
+
+    private List<Ticket> getTickets() {
+        return ticketMapper.getTickets();
+    }
+
+    public Ticket getRandom() {
+        return getTickets().get((int)(Math.random()*getNum()));
     }
 }
 

@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{bootstrap/css/bootstrap.css}">
 </head>
 <body>
-    <div class="container bg-light p-5">
-        <div class="row text-center">
-            <h1>Vote Progress</h1>
-        </div>
-        <div class="row">
+    <div class="container">
+        <div class="row bg-light p-5">
+            <div class="text-center">
+                <h1>Vote Progress</h1>
+            </div>
             <ul class="list-group w-100">
                 <li th:each="contestant, stat : ${contestants}" class="list-group-item mb-2">
                     <span th:text="${contestant.getName() + ' '}"></span>
@@ -23,6 +23,17 @@
                     </div>
                 </li>
             </ul>
+        </div>
+        <div class="row bg-light p-5 mt-5">
+            <div>
+                <h1>Draw Ticket</h1>
+            </div>
+            <div class="w-100"></div>
+            <div>
+                <form action="/ticketDraw" method="post">
+                    <button type="submit" class="btn btn-primary">Draw</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>
