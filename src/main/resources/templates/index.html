@@ -109,16 +109,16 @@
 
                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
                              data-parent="#accordionExample">
-                            <div class="card-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa
-                                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
-                                single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                                beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
-                                vice
-                                lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
-                                probably haven't heard of them accusamus labore sustainable VHS.
+                            <div class="card-body px-0">
+                                <div>
+                                    <iframe class="w-100" src="https://www.youtube.com/embed/MPbUaIZAaeA"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen>
+                                    </iframe>
+                                </div>
+                                <p>Anim pariatur cliche reprehenderit , enim eiusmod high life accusamus terry richardson
+                                    adsquid.</p>
                             </div>
                         </div>
                     </div>
@@ -363,8 +363,7 @@
                     var payerEmail = details.payer.email_address;
                     var quantity = details.purchase_units[0].items[0].quantity;
                     console.log(quantity);
-                    fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}&quantity=${quantity}`), {
-                    }
+                    fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}&quantity=${quantity}`), {}
                     alert("You have made the transaction. Thank you for your support!")
                     location.reload();
                 });
