@@ -160,5 +160,14 @@ public class Router {
             e.printStackTrace();
         }
     }
+
+    @PostMapping("/ticketDraw")
+    public void ticketDraw(HttpServletResponse resp) {
+        try {
+            resp.sendRedirect("/draw?winner=" + ticketService.getRandom().getNumber());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

@@ -13,5 +13,9 @@ public interface TicketMapper {
     List<Ticket> getTicketByEmail(String email);
     @Delete("delete from ticket where number=#{number}")
     void deleteTicket(String number);
+    @Select("SELECT COUNT(*) from ticket")
+    int getNum();
+    @Select("SELECT * from ticket")
+    List<Ticket> getTickets();
 }
 

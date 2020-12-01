@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ticket Draaw</title>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{bootstrap/css/bootstrap.css}">
+    <script type="text/javascript" src="../static/bootstrap/js/jquery-1.7.2-min.js" th:src="@{bootstrap/js/jquery-1.7.2-min.js}"></script>
+    <script type="text/javascript" src="../static/bootstrap/js/easing.js" th:src="@{bootstrap/js/easing.js}"></script>
+    <style>
+        body {
+            background-color: #181818;
+        }
+        .row {
+            height: 260px;
+            width: 100%;
+            margin-top: 200px;
+            border: 2px solid black;
+        }
+        .num {
+            background: url(image/num.png) top center repeat-y;
+            width: 185px;
+            height: 265px;
+            background-color: #EFB93D;
+            float: left;
+            margin-right: 6px;
+        }
+
+        .btn {
+            width: 264px;
+            height: 89px;
+            position: absolute;
+            left: 50%;
+            bottom: 200px;
+            margin-left: -132px;
+            font-size: 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            clear: both;
+        }
+        
+        .btn:hover {
+            background-color: #000;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="container">
+        <div class="row num_box">
+            <div class="col num"></div>
+            <div class="col num"></div>
+            <div class="col num"></div>
+            <div class="col num"></div>
+            <div class="col num"></div>
+            <div class="col num"></div>
+            <div class="btn btn-dark">Draw</div>
+            <input type="hidden" th:value="${param.winner}" value="123456" id="winner">
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function numRand() {
+        var x = 999999; //上限
+        var y = 111111; //下限
+        var rand = parseInt(Math.random() * (x - y + 1) + y);
+        return rand;
+    }
+
+    var isBegin = false;
+    $(function () {
+        var u = 265;
+        $('.btn').click(function () {
+            if (isBegin) return false;
+            isBegin = true;
+            $(".num").css('backgroundPositionY', 0);
+            var result = document.getElementById("winner").value;
+            $('#res').text('随机摇奖结果 = ' + result);
+            var num_arr = (result + '').split('');
+            $(".num").each(function (index) {
+                var _num = $(this);
+                setTimeout(function () {
+                    _num.animate({
+                        backgroundPositionY: (u * 60) - (u * num_arr[index])
+                    }, {
+                        duration: 6000 + index * 3000,
+                        easing: "easeInOutCirc",
+                        complete: function () {
+                            if (index == 3) isBegin = false;
+                        }
+                    });
+                }, index * 300);
+            });
+        });
+    });
+</script>
+</html>
