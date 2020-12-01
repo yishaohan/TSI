@@ -19,7 +19,7 @@ class TalentshowintroTests {
     void contextLoads() {
     }
 
-    @Test
+    //    @Test
     void mailSend() {
 //        mailService.sendSimpleMail("yicunzhi@gmail.com", "yicunzhi@icloud.com", "yicunzhi@msn.com", "测试邮件主题", "测试邮件内容");
         Context ctx = new Context();
