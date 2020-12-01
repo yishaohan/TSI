@@ -88,6 +88,7 @@ public class Router {
         List<Contestant> contestants = contestantService.getContestants();
         mv.addObject("contestants", contestants);
         mv.addObject("sum", contestantService.getNumOfBallots());
+        mv.addObject("num", orderService.getAllOrder().size());
         return mv;
     }
 
