@@ -91,16 +91,6 @@ public class Router {
         return mv;
     }
 
-    @PostMapping("/ticket")
-    public void getTicket(HttpServletRequest req, HttpServletResponse resp) {
-        String num = ticketService.save(req.getParameter("email"));
-        try {
-            resp.sendRedirect("/?ticket=" + num);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @GetMapping("/captureOrder")
     public void captureOrder(HttpServletRequest req, HttpServletResponse resp) {
         final Enumeration<String> names = req.getParameterNames();
@@ -135,11 +125,15 @@ public class Router {
         order.setPayerSurname(StringUtils.isNull(req.getParameter("payerSurname")));
         order.setPayerEmail(StringUtils.isNull(req.getParameter("payerEmail")));
         orderService.save(order);
-        try {
-            resp.sendRedirect("/");
-        } catch (IOException e) {
-            e.printStackTrace();
+        int quantity = Integer.parseInt(req.getParameter("quantity"));
+        String result = "";
+        while (quantity-- > 0) {
+            result += ticketService.save(order.getOrderID());
+            if (quantity != 0) {
+                result += ", ";
+            }
         }
+        req.getSession().setAttribute("ticket", result);
     }
 
     @GetMapping("/orderCancel")

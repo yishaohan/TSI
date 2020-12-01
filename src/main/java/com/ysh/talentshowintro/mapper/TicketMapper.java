@@ -7,10 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface TicketMapper {
-    @Insert("insert into ticket(email, number) values(#{email}, #{number})")
+    @Insert("insert into ticket(orderID, number) values(#{orderID}, #{number})")
     void save(Ticket ticket);
-    @Select("select id, email, number from ticket where email=#{email}")
-    List<Ticket> getTicketByEmail(String email);
     @Delete("delete from ticket where number=#{number}")
     void deleteTicket(String number);
     @Select("SELECT COUNT(*) from ticket")

@@ -51,7 +51,7 @@
 <div class="container" style="position: relative">
     <div aria-live="polite" aria-atomic="true" style="z-index: auto; position: absolute; top: 0; right: -50px;
     min-height: 200px;">
-        <div th:if="${param.ticket != null}" class="toast show" id="myToast"
+        <div th:class="${session.ticket != null}?'toast show':'toast hide'" class="" id="myToast"
              data-autohide="false">
             <div class="toast-header">
                 <strong class="mr-auto">Bootstrap</strong>
@@ -61,7 +61,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="toast-body" th:text="${'Thank you for your support! You ticket numbers are ' + param.ticket}">
+            <div class="toast-body"
+                 th:text="${'You ticket numbers are ' + session.ticket}">
                 Hello, world! This is a toast message.
             </div>
         </div>
@@ -194,11 +195,13 @@
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
                     card's content.</p>
             </div>
-            <div th:if="${param.ticket!=null}" th:text="${'Your ticket numbers are: ' + param.ticket}"
+            <div th:if="${session.ticket != null}" th:text="${'Your ticket numbers are: ' + session.ticket}"
                  class="alert alert-success"
                  role="alert">
                 A simple success alert—check it out!
             </div>
+
+            <div th:text="${session.ticket}"></div>
 
             <div id="smart-button-container">
                 <div style="text-align: center;">
@@ -233,7 +236,7 @@
                 </div>
             </div>
 
-            <form action="/ticket" method="post">
+            <!--<form action="/ticket" method="post">
                 <div class="form-group">
                     <label for="email2">Email address</label>
                     <input type="email" required class="form-control" name="email" id="email2"
@@ -242,7 +245,7 @@
                         else.</small>
                 </div>
                 <button type="submit" class="btn btn-primary show-toast" onclick="toast()">Buy</button>
-            </form>
+            </form>-->
         </div>
         <div class="col-md p-4 card">
             <img src="../static/image/donate.jpeg" th:src="@{image/donate.jpeg}" class="card-img-top" alt="...">
@@ -358,9 +361,12 @@
                     var payerGivenName = details.payer.name.given_name;
                     var payerSurname = details.payer.name.surname;
                     var payerEmail = details.payer.email_address;
-
-                    fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}`), {}
-                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    var quantity = details.purchase_units[0].items[0].quantity;
+                    console.log(quantity);
+                    fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}&quantity=${quantity}`), {
+                    }
+                    alert("You have made the transaction. Thank you for your support!")
+                    location.reload();
                     location.reload();
                 });
             },

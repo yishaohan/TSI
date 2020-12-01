@@ -2,7 +2,7 @@ package com.ysh.talentshowintro.model;
 
 public class Ticket {
     private int id;
-    private String email;
+    private String OrderID;
     private String number;
 
     public int getId() {
@@ -13,12 +13,12 @@ public class Ticket {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getOrderID() {
+        return OrderID;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setOrderID(String orderID) {
+        OrderID = orderID;
     }
 
     public String getNumber() {

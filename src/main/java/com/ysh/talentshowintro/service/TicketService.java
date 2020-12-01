@@ -15,9 +15,9 @@ public class TicketService {
         this.ticketMapper = ticketMapper;
     }
 
-    public String save(String email) {
+    public String save(String orderID) {
         Ticket ticket = new Ticket();
-        ticket.setEmail(email);
+        ticket.setOrderID(orderID);
         Random random = new Random();
         String num = Integer.toString(random.nextInt());
         num = num.substring(1, 7);
@@ -25,10 +25,6 @@ public class TicketService {
         System.out.println(num);
         ticketMapper.save(ticket);
         return num;
-    }
-
-    public List<Ticket> getTicketByEmail(String email) {
-        return ticketMapper.getTicketByEmail(email);
     }
 
     public void deleteTicket(String number) {
