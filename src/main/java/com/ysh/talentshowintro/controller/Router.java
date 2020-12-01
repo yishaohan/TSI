@@ -1,12 +1,11 @@
 package com.ysh.talentshowintro.controller;
 
 import com.ysh.talentshowintro.model.Contestant;
+import com.ysh.talentshowintro.model.Message;
 import com.ysh.talentshowintro.model.Order;
-import com.ysh.talentshowintro.service.ContestantService;
-import com.ysh.talentshowintro.service.EmailService;
-import com.ysh.talentshowintro.service.OrderService;
-import com.ysh.talentshowintro.service.TicketService;
+import com.ysh.talentshowintro.service.*;
 import com.ysh.talentshowintro.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +28,14 @@ public class Router {
     final ContestantService contestantService;
     final EmailService emailService;
     final OrderService orderService;
+    final MessageService messageService;
 
-    public Router(TicketService ticketService, ContestantService contestantService, EmailService emailService, OrderService orderService) {
+    public Router(TicketService ticketService, ContestantService contestantService, EmailService emailService, OrderService orderService, MessageService messageService) {
         this.ticketService = ticketService;
         this.contestantService = contestantService;
         this.emailService = emailService;
         this.orderService = orderService;
+        this.messageService = messageService;
     }
 
     @PostMapping("/vote")
@@ -143,7 +144,9 @@ public class Router {
 
     @GetMapping("/orderCancel")
     public void orderCancel(HttpServletRequest req, HttpServletResponse resp) {
-        System.out.println(req.getParameter("message"));
+        Message message = new Message();
+        message.setMessage(StringUtils.isNull(req.getParameter("message")));
+        messageService.save(message);
         try {
             resp.sendRedirect("/");
         } catch (IOException e) {
@@ -153,7 +156,9 @@ public class Router {
 
     @GetMapping("/orderError")
     public void orderError(HttpServletRequest req, HttpServletResponse resp) {
-        System.out.println(req.getParameter("message"));
+        Message message = new Message();
+        message.setMessage(StringUtils.isNull(req.getParameter("message")));
+        messageService.save(message);
         try {
             resp.sendRedirect("/");
         } catch (IOException e) {

@@ -352,7 +352,6 @@
                     var intent = details.intent;
                     var status = details.status;
                     // var links = details.links[0].rel;
-                    details.
                     var createTime = details.create_time;
                     var updateTime = details.update_time;
                     var payerID = details.payer.payer_id;
@@ -366,9 +365,7 @@
                 });
             },
             onCancel: function (data) {
-                fetch(`/orderCancel?message=cancel`), {}
-                console.log("CANCEL-1: " + data);
-                console.log("CANCEL-2: " + data.orderId);
+                fetch(`/orderCancel?message=Order is ${data.orderID} cancelled !`), {}
             },
             onError: function (err) {
                 fetch(`/orderError?message=${err.message}`), {}
