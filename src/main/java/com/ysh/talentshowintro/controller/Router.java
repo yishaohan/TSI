@@ -1,13 +1,12 @@
 package com.ysh.talentshowintro.controller;
 
+import com.ysh.talentshowintro.model.Contestant;
 import com.ysh.talentshowintro.model.Order;
 import com.ysh.talentshowintro.service.ContestantService;
 import com.ysh.talentshowintro.service.EmailService;
 import com.ysh.talentshowintro.service.OrderService;
 import com.ysh.talentshowintro.service.TicketService;
-import com.ysh.talentshowintro.model.Contestant;
 import com.ysh.talentshowintro.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +18,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.TimeZone;
 
 @Controller
 public class Router {
@@ -114,7 +116,6 @@ public class Router {
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         Timestamp createDateTime = null;
         try {
-//            createDateTime = (Timestamp) df.parse(cdt);
             createDateTime = new Timestamp(df.parse(cdt).getTime());
         } catch (ParseException e) {
             e.printStackTrace();
@@ -123,7 +124,6 @@ public class Router {
         String ut = StringUtils.isNull(req.getParameter("updateTime"));
         Timestamp updateDateTime = null;
         try {
-//            updateDateTime = (Timestamp) df.parse(ut);
             updateDateTime = new Timestamp(df.parse(ut).getTime());
         } catch (ParseException e) {
             e.printStackTrace();

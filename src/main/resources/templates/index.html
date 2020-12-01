@@ -352,6 +352,7 @@
                     var intent = details.intent;
                     var status = details.status;
                     // var links = details.links[0].rel;
+                    details.
                     var createTime = details.create_time;
                     var updateTime = details.update_time;
                     var payerID = details.payer.payer_id;
@@ -361,6 +362,7 @@
 
                     fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}`), {}
                     alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    location.reload();
                 });
             },
             onCancel: function (data) {
