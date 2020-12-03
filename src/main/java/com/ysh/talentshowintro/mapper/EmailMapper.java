@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface EmailMapper {
     @Select("Select email from emails")
-    List<String> getEmails();
+    List<String> getAllEmails();
 
     @Select("Select voted from emails where email=#{email}")
     boolean isVoted(String email);

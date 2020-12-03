@@ -1,7 +1,36 @@
 package com.ysh.talentshowintro.model;
 
+import java.sql.Timestamp;
+
 public class Message {
-    String message = "";
+    private int id;
+    private Timestamp createDateTime;
+    private String subject;
+    private String message = "";
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Timestamp getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(Timestamp createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
     public String getMessage() {
         return message;
@@ -13,8 +42,11 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Error{" +
-                "message='" + message + '\'' +
+        return "Message{" +
+                "id=" + id +
+                ", createDateTime=" + createDateTime +
+                ", subject='" + subject + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }

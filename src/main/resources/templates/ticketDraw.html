@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>ticket Draw</title>
-    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{bootstrap/css/bootstrap.css}">
-    <script type="text/javascript" src="../static/bootstrap/js/jquery-1.7.2-min.js" th:src="@{bootstrap/js/jquery-1.7.2-min.js}"></script>
-    <script type="text/javascript" src="../static/bootstrap/js/easing.js" th:src="@{bootstrap/js/easing.js}"></script>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script type="text/javascript" src="../static/bootstrap/js/jquery-1.7.2-min.js"
+            th:src="@{/bootstrap/js/jquery-1.7.2-min.js}"></script>
+    <script type="text/javascript" src="../static/bootstrap/js/easing.js" th:src="@{/bootstrap/js/easing.js}"></script>
     <style>
         body {
             background-color: #181818;
         }
+
         .row {
             height: 260px;
             width: 100%;
             margin-top: 200px;
             border: 2px solid black;
         }
+
         .num {
-            background: url(image/num.png) top center repeat-y;
+            background: url(/image/num.png) top center repeat-y;
             width: 185px;
             height: 265px;
             background-color: #EFB93D;
@@ -37,7 +40,7 @@
             cursor: pointer;
             clear: both;
         }
-        
+
         .btn:hover {
             background-color: #000;
         }
@@ -55,7 +58,7 @@
             <div class="col num"></div>
             <div class="col num"></div>
             <div class="btn btn-dark">Draw</div>
-            <input type="hidden" th:value="${param.winner}" value="123456" id="winner">
+            <input type="hidden" th:value="${winner}" value="123456" id="winner">
         </div>
     </div>
 </div>

@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MessageMapper {
-    @Insert("insert into `messages`(message) values(#{message})")
+    @Insert("insert into `messages`(createDateTime, subject, message) values(#{createDateTime}, #{subject}, #{message})")
     public void save(Message message);
 }

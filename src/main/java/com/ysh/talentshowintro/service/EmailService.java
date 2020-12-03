@@ -14,8 +14,8 @@ public class EmailService {
         this.emailMapper = emailMapper;
     }
 
-    public List<String> getEmails() {
-        return emailMapper.getEmails();
+    public List<String> getAllEmails() {
+        return emailMapper.getAllEmails();
     }
 
     public boolean isVoted(String email) {

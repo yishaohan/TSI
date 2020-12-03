@@ -39,6 +39,10 @@ public class ExceptionHandle {
         logs.setQueryString(temp);
         logs.setMethod(req.getMethod());
         logs.setStatus(String.valueOf(resp.getStatus()));
+//        temp = "";
+//        if (e.toString().length() > 4000) {
+//            temp = e.toString().substring(0, 3999);
+//        }
         logs.setMessage(e.toString());
         temp = req.getHeader("referer");
         if (temp == null) {

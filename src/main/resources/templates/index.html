@@ -117,7 +117,8 @@
                                             allowfullscreen>
                                     </iframe>
                                 </div>
-                                <p>Anim pariatur cliche reprehenderit , enim eiusmod high life accusamus terry richardson
+                                <p>Anim pariatur cliche reprehenderit , enim eiusmod high life accusamus terry
+                                    richardson
                                     adsquid.</p>
                             </div>
                         </div>
@@ -236,7 +237,7 @@
                 </div>
             </div>
 
-            <!--<form action="/ticket" method="post">
+            <form action="/ticket" method="post">
                 <div class="form-group">
                     <label for="email2">Email address</label>
                     <input type="email" required class="form-control" name="email" id="email2"
@@ -244,8 +245,9 @@
                     <small id="email" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                 </div>
-                <button type="submit" class="btn btn-primary show-toast" onclick="toast()">Buy</button>
-            </form>-->
+                <!--                <button type="submit" class="btn btn-primary show-toast" onclick="toast()">Buy</button>-->
+            </form>
+
         </div>
         <div class="col-md p-4 card">
             <img src="../static/image/donate.jpeg" th:src="@{image/donate.jpeg}" class="card-img-top" alt="...">
@@ -279,29 +281,23 @@
                 shape: 'pill',
                 color: 'gold',
                 layout: 'vertical',
-                label: 'paypal',
-
+                label: 'paypal'
             },
-            // // onInit is called when the button first renders
-            // onInit: function (data, actions) {
-            //     // Disable the buttons
-            //     actions.disable();
-            //     // Listen for changes to the checkbox
-            //     document.querySelector('#email2')
-            //         .addEventListener('change', function (event) {
-            //             // Enable or disable the button when it is checked or unchecked
-            //             actions.enable();
-            //             console.log("激活付款按钮!")
-            //         });
-            // },
-            // // onClick is called when the button is clicked
-            // onClick: function () {
-            //     // Show a validation error if the checkbox is not checked
-            //     if (!document.querySelector('#email2').value != '') {
-            //         actions.enable();
-            //         // document.querySelector('#error').classList.remove('hidden');
-            //     }
-            // },
+            onInit: function (data, actions) {
+                actions.disable();
+                document.getElementById("email2").addEventListener("focusout", function (event) {
+                    if (document.getElementById('email2').value == "") {
+                        actions.disable();
+                    } else {
+                        actions.enable();
+                    }
+                })
+            },
+            onClick: function (data, actions) {
+                if (document.getElementById('email2').value == "") {
+                    alert("Please fill in the email address");
+                }
+            },
             createOrder: function (data, actions) {
                 var selectedItemDescription = itemOptions.options[itemOptions.selectedIndex].value;
                 var selectedItemPrice = parseFloat(itemOptions.options[itemOptions.selectedIndex].getAttribute("price"));
@@ -316,7 +312,7 @@
                 var priceTotal = quantity * selectedItemPrice + parseFloat(shipping) + tax;
                 priceTotal = Math.round(priceTotal * 100) / 100;
                 var itemTotalValue = Math.round((selectedItemPrice * quantity) * 100) / 100;
-                var create = actions.order.create({
+                return actions.order.create({
                     purchase_units: [{
                         description: orderDescription,
                         amount: {
@@ -347,24 +343,25 @@
                         }]
                     }]
                 });
-                return create;
             },
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (details) {
                     var id = details.id;
-                    var intent = details.intent;
-                    var status = details.status;
-                    // var links = details.links[0].rel;
-                    var createTime = details.create_time;
-                    var updateTime = details.update_time;
-                    var payerID = details.payer.payer_id;
-                    var payerGivenName = details.payer.name.given_name;
-                    var payerSurname = details.payer.name.surname;
-                    var payerEmail = details.payer.email_address;
-                    var quantity = details.purchase_units[0].items[0].quantity;
-                    console.log(quantity);
-                    fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}&quantity=${quantity}`), {}
-                    alert("You have made the transaction. Thank you for your support!")
+                    // var intent = details.intent;
+                    // var status = details.status;
+                    // // var links = details.links[0].rel;
+                    // var createTime = details.create_time;
+                    // var updateTime = details.update_time;
+                    // var payerID = details.payer.payer_id;
+                    // var payerGivenName = details.payer.name.given_name;
+                    // var payerSurname = details.payer.name.surname;
+                    // var payerEmail = details.payer.email_address;
+                    // var quantity = details.purchase_units[0].items[0].quantity;
+                    // console.log(quantity);
+                    // fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}&quantity=${quantity}`), {}
+                    var email = document.getElementById("email2").value;
+                    fetch(`/captureOrder?id=${id}&email=${email}`), {}
+                    alert("You have made the transaction. Thank you for your support !");
                     location.reload();
                 });
             },
@@ -373,7 +370,7 @@
             },
             onError: function (err) {
                 fetch(`/orderError?message=${err.message}`), {}
-                console.log(err);
+                alert("There was an error in payment, please try again !");
             }
         }).render('#paypal-button-container');
     }

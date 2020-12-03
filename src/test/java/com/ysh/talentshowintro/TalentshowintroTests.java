@@ -1,6 +1,13 @@
 package com.ysh.talentshowintro;
 
-import com.ysh.talentshowintro.service.MailService;
+import com.paypal.http.HttpResponse;
+import com.paypal.http.serializer.Json;
+import com.paypal.orders.Order;
+import com.paypal.orders.OrdersGetRequest;
+import com.ysh.talentshowintro.paypal.Credentials;
+import com.ysh.talentshowintro.Tasks.SendMailTask;
+import com.ysh.talentshowintro.service.TicketService;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,20 +18,32 @@ import org.thymeleaf.context.Context;
 class TalentshowintroTests {
 
     @Autowired
-    MailService mailService;
+    SendMailTask sendMailTask;
 
     @Autowired
     TemplateEngine templateEngine;
 
+    @Autowired
+    TicketService ticketService;
+
     void contextLoads() {
     }
 
-    //    @Test
+    @Test
     void mailSend() {
-//        mailService.sendSimpleMail("yicunzhi@gmail.com", "yicunzhi@icloud.com", "yicunzhi@msn.com", "测试邮件主题", "测试邮件内容");
-        Context ctx = new Context();
-        ctx.setVariable("username", "小胖胖");
-        String mail = templateEngine.process("mail.html", ctx);
-        mailService.sendSimpleMail("yicunzhi@gmail.com", "yicunzhi@icloud.com", "yicunzhi@msn.com", "测试邮件主题", mail);
+        sendMailTask.sendMail();
+    }
+
+    //    @Test
+    void paypal() throws Exception {
+        OrdersGetRequest request = new OrdersGetRequest("59L40591CR683515R");
+        HttpResponse<Order> response = Credentials.paypalClient.execute(request);
+        Order order = ((Order) response.result());
+        System.out.println(new JSONObject(new Json().serialize(response.result())).toString(4));
+    }
+
+    //    @Test
+    public void test() {
+        System.out.println(ticketService.getTicketByID(70));
     }
 }
