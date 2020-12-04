@@ -18,17 +18,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
+//        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/error").setViewName("error");
 //        registry.addViewController("/admin/draw").setViewName("ticketDraw");
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new Request(logsService))
-                .excludePathPatterns("/bootstrap/css/**")
-                .excludePathPatterns("/bootstrap/icon-fonts/**")
+                .excludePathPatterns("/bootstrap/**")
                 .excludePathPatterns("/image/**")
-                .excludePathPatterns("/bootstrap/js/**");
+                .excludePathPatterns("/favicon.ico");
 //        registry.addInterceptor(new VerifyCodeRegister()).addPathPatterns("/register");
     }
 

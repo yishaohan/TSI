@@ -84,7 +84,7 @@ public class Router {
     }
 
     @GetMapping("/admin")
-    public ModelAndView getAdmin() {
+    public ModelAndView getAdmin(HttpServletRequest req) {
         ModelAndView mv = new ModelAndView("admin");
         List<Contestant> contestants = contestantService.getContestants();
         mv.addObject("contestants", contestants);
@@ -294,6 +294,7 @@ public class Router {
         int quantity = customOrder.getQuantity();
         List<Ticket> tickets = (List<Ticket>) req.getSession().getAttribute("tickets");
         if (tickets == null) {
+            System.out.println("tickets is null");
             tickets = new ArrayList<Ticket>();
             req.getSession().setAttribute("tickets", tickets);
         }

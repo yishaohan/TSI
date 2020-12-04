@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Index</title>
+    <title>Talent Show 2020</title>
+    <link rel="icon" href="../favicon.ico" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{bootstrap/css/bootstrap.css}">
     <link rel="stylesheet" href="../static/bootstrap/css/style.css" th:href="@{bootstrap/css/style.css}">
+    <link rel="stylesheet" href="../static/bootstrap/iconfont/iconfont.css" th:href="@{bootstrap/iconfont/iconfont.css}">
     <script src="../static/bootstrap/js/jquery-3.5.1.slim.min.js"
             th:src="@{bootstrap/js/jquery-3.5.1.slim.min.js}"></script>
     <script src="../static/bootstrap/js/popper.min.js" th:src="@{bootstrap/js/popper.min.js}"></script>
@@ -49,28 +52,30 @@
 <body>
 
 <div class="container" style="position: relative">
-    <div aria-live="polite" aria-atomic="true" style="z-index: auto; position: absolute; top: 0; right: -50px;
-    min-height: 200px;">
-        <div th:class="${session.ticket != null}?'toast show':'toast hide'" class="" id="myToast"
-             data-autohide="false">
-            <div class="toast-header">
-                <strong class="mr-auto">Bootstrap</strong>
-                <small>11 mins ago</small>
-                <button th:onclick="'javascript:toast();'" type="button" class="ml-2 mb-1 close" data-dismiss="toast"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="toast-body"
-                 th:text="${'You ticket numbers are ' + session.ticket}">
-                Hello, world! This is a toast message.
-            </div>
-        </div>
-    </div>
+    <!--    <div aria-live="polite" aria-atomic="true" style="z-index: auto; position: absolute; top: 0; right: -50px;-->
+    <!--    min-height: 200px;">-->
+    <!--        <div th:class="${session.ticket != null}?'toast show':'toast hide'" class="" id="myToast"-->
+    <!--             data-autohide="false">-->
+    <!--            <div class="toast-header">-->
+    <!--                <strong class="mr-auto">Bootstrap</strong>-->
+    <!--                <small>11 mins ago</small>-->
+    <!--                <button th:onclick="'javascript:toast();'" type="button" class="ml-2 mb-1 close" data-dismiss="toast"-->
+    <!--                        aria-label="Close">-->
+    <!--                    <span aria-hidden="true">&times;</span>-->
+    <!--                </button>-->
+    <!--            </div>-->
+    <!--            <div class="toast-body"-->
+    <!--                 th:text="${'You ticket numbers are ' + session.ticket}">-->
+    <!--                Hello, world! This is a toast message.-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <div class="row" style="height: 200px;">
         <h1 class="col text-center center" style="line-height: 200px">Talent Show</h1>
     </div>
-    <div class="row mb-4" id="twitch-embed"></div>
+    <!--    **************************************************************************-->
+    <!--    <div class="row mb-4" id="twitch-embed"></div> -->
+
     <div class="row">
         <div class="col-md mr-sm-4 p-4 card">
             <img src="../static/image/vote.jpeg" th:src="@{image/vote.jpeg}" class="card-img-top" alt="...">
@@ -196,14 +201,25 @@
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
                     card's content.</p>
             </div>
-            <div th:if="${session.ticket != null}" th:text="${'Your ticket numbers are: ' + session.ticket}"
-                 class="alert alert-success"
-                 role="alert">
-                A simple success alert—check it out!
+            <div class="form-group">
+                <input type="email" required class="form-control" name="email" id="email2" placeholder="Please enter your email">
+                <small class="form-text text-muted">We'll never share your email with anyone.</small>
             </div>
-
-            <div th:text="${session.ticket}"></div>
-
+            <div th:remove="${session.tickets !=null } ? none : all">
+                <p>
+                    <button class="btn btn-warning rounded-pill m-auto w-100" type="button" data-toggle="collapse" data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">
+                        show ticket number
+                    </button>
+                </p>
+                <div class="collapse mb-3" id="tickets">
+                    <div class="d-block card card-body text-center mb-3 border-warning px-0" th:each="ticket : ${session.tickets}" style="background-image: url('/image/lotteryBackground.png');background-repeat: no-repeat;background-size: auto 100%;border-width: medium;">
+                                <span class="" th:each="i:${#numbers.sequence(0,5)}">
+                                    <span th:class="|text-danger iconfont icon-shuzi${#strings.substring(ticket.getNumber(), i, i+1 )}|" style="font-size: x-large;"></span>
+                                </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////-->
             <div id="smart-button-container">
                 <div style="text-align: center;">
                     <div style="margin-bottom: 1.25rem;">
@@ -237,16 +253,9 @@
                 </div>
             </div>
 
-            <form action="/ticket" method="post">
-                <div class="form-group">
-                    <label for="email2">Email address</label>
-                    <input type="email" required class="form-control" name="email" id="email2"
-                           aria-describedby="emailHelp">
-                    <small id="email" class="form-text text-muted">We'll never share your email with anyone
-                        else.</small>
-                </div>
-                <!--                <button type="submit" class="btn btn-primary show-toast" onclick="toast()">Buy</button>-->
-            </form>
+            <!--            <form action="/ticket" method="post">-->
+            <!--                <button type="submit" class="btn btn-primary show-toast" onclick="toast()">Buy</button>-->
+            <!--            </form>-->
 
         </div>
         <div class="col-md p-4 card">
@@ -360,17 +369,21 @@
                     // console.log(quantity);
                     // fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}&quantity=${quantity}`), {}
                     var email = document.getElementById("email2").value;
-                    fetch(`/captureOrder?id=${id}&email=${email}`), {}
-                    alert("You have made the transaction. Thank you for your support !");
-                    location.reload();
+                    fetch(`/captureOrder?id=${id}&email=${email}`, {}).then(function () {
+                        // alert("You have made the transaction. Thank you for your support !");
+                        window.location.reload();
+                    });
                 });
             },
             onCancel: function (data) {
-                fetch(`/orderCancel?message=Order is ${data.orderID} cancelled !`), {}
+                fetch(`/orderCancel?message=Order is ${data.orderID} cancelled !`, {}).then(function () {
+                    alert("You canceled the payment order !");
+                });
             },
             onError: function (err) {
-                fetch(`/orderError?message=${err.message}`), {}
-                alert("There was an error in payment, please try again !");
+                fetch(`/orderError?message=${err.message}`, {}).then(function () {
+                    alert("There was an error in payment, please try again !");
+                });
             }
         }).render('#paypal-button-container');
     }
