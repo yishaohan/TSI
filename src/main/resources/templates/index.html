@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-STPRYEJ2MV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-STPRYEJ2MV');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Talent Show 2020</title>
@@ -25,8 +38,8 @@
             });
         });
 
-        function submit() {
-            var email = document.getElementById("exampleInputEmail1");
+        function voted1() {
+            var email = document.getElementById("email1");
             var votes = document.getElementsByClassName("form-check-input");
             var cnt = 0;
             for (var i = 0; i < 10; i++) {
@@ -49,7 +62,7 @@
         }
     </style>
 </head>
-<body>
+<body th:onload="${second > 0 } ? 'javascript:countDown('+${second}+');': ''">
 
 <div class="container" style="position: relative">
     <!--    <div aria-live="polite" aria-atomic="true" style="z-index: auto; position: absolute; top: 0; right: -50px;-->
@@ -74,7 +87,7 @@
         <h1 class="col text-center center" style="line-height: 200px">Talent Show</h1>
     </div>
     <!--    **************************************************************************-->
-    <!--    <div class="row mb-4" id="twitch-embed"></div> -->
+    <div class="row mb-4" id="twitch-embed"></div>
 
     <div class="row">
         <div class="col-md mr-sm-4 p-4 card">
@@ -85,16 +98,15 @@
                     card's content.</p>
             </div>
             <div class="accordion" id="accordionExample">
-                <div th:if="${param.error!=null}" th:text="${param.error}" class="alert alert-danger" role="alert">
+                <div th:if="${param.error!=null}" th:text="${param.error}" class="alert alert-danger rounded-pill" role="alert">
                     A simple danger alert—check it out!
                 </div>
+                <div class="alert-success rounded-pill text-center mb-3" th:text="${param.message} ? ${param.message} : ''">Thank you !</div>
                 <form action="/vote" method="post">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" required class="form-control" name="email" id="exampleInputEmail1"
-                               aria-describedby="emailHelp">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                            else.</small>
+                        <!--                        <label for="exampleInputEmail1">Email address</label>-->
+                        <input type="email" required class="form-control form-control-sm" name="email1" id="email1" placeholder="Please enter your email">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
                     </div>
                     <div class="card mt-2">
                         <div class="card-header" id="headingOne">
@@ -190,7 +202,7 @@
                             </div>
                         </div>
                     </div>
-                    <a type="button" onclick="submit()" class="btn btn-primary mt-4">Submit</a>
+                    <button id="voted" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
                 </form>
             </div>
         </div>
@@ -202,7 +214,7 @@
                     card's content.</p>
             </div>
             <div class="form-group">
-                <input type="email" required class="form-control" name="email" id="email2" placeholder="Please enter your email">
+                <input type="email" required class="form-control form-control-sm" name="email" id="email2" placeholder="Please enter your email">
                 <small class="form-text text-muted">We'll never share your email with anyone.</small>
             </div>
             <div th:remove="${session.tickets !=null } ? none : all">
@@ -412,6 +424,34 @@
         var player = embed.getPlayer();
         player.play();
     });
+</script>
+
+<script>
+    // var hour = document.querySelector('.hour');
+    // var minute = document.querySelector('.minute');
+    // var second = document.querySelector('.second');
+
+    // countDown(1000);
+
+    function countDown(times) {
+        var timer = setInterval(function () {
+            if (times <= 0) {
+                document.getElementById("voted").innerHTML = "Submit";
+                document.getElementById("voted").disabled = false;
+                clearInterval(timer);
+                return;
+            }
+            var h = parseInt(times / 60 / 60 % 24);
+            h = h < 10 ? '0' + h : h;
+            var m = parseInt(times / 60 % 60);
+            m = m < 10 ? '0' + m : m;
+            var s = parseInt(times % 60);
+            s = s < 10 ? '0' + s : s;
+            times = times - 1;
+            var temp = "" + h + " : " + m + " : " + s;
+            document.getElementById("voted").innerHTML = temp;
+        }, 1000);
+    }
 </script>
 
 </body>

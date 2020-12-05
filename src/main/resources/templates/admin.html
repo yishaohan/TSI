@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-STPRYEJ2MV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-STPRYEJ2MV');
+    </script>
     <meta charset="UTF-8">
     <title>Talent Show 2020 | Admin</title>
     <link rel="icon" href="../favicon.ico" th:href="@{/favicon.ico}" type="image/x-icon"/>
@@ -44,6 +57,34 @@
         <div class="w-100"></div>
         <div>
             <h3 th:text="|We have selled ${num} tickets|">We have selled 30 tickets</h3>
+        </div>
+    </div>
+    <div class="row bg-light p-5 mt-5">
+        <div>
+            <h1>App Parameter</h1>
+        </div>
+        <div class="w-100">
+            <div class="alert alert-danger" th:if="${param.paramError !=null }" th:text="${param.paramError}">
+
+            </div>
+            <form method="post" action="/admin">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">START</div>
+                    </div>
+                    <input name="startDate" th:value="${date}" class="form-control" type="date" min="2020-12-04" style="max-width: 200px;">
+                    <input name="startTime" th:value="${time}" class="form-control" type="time" style="max-width: 120px;">
+                </div>
+                <div class="custom-control custom-switch">
+                    <input name="verification" th:checked="${enableVerificationCode}" type="checkbox" class="custom-control-input" id="customSwitch1">
+                    <label class="custom-control-label" for="customSwitch1">验证码</label>
+                </div>
+                <div class="row justify-content-center mt-2">
+                    <button class="btn btn-outline-success rounded-pill" style="min-width: 188px;" type="submit">
+                        Save
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

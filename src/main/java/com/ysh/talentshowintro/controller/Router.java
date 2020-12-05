@@ -2,13 +2,11 @@ package com.ysh.talentshowintro.controller;
 
 import com.paypal.http.HttpResponse;
 import com.paypal.orders.*;
-import com.ysh.talentshowintro.model.Contestant;
-import com.ysh.talentshowintro.model.CustomOrder;
-import com.ysh.talentshowintro.model.Message;
-import com.ysh.talentshowintro.model.Ticket;
+import com.ysh.talentshowintro.model.*;
 import com.ysh.talentshowintro.paypal.Credentials;
 import com.ysh.talentshowintro.service.*;
 import com.ysh.talentshowintro.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,14 +29,16 @@ public class Router {
     final OrderService orderService;
     final MessageService messageService;
     final MailQueueService mailQueueService;
+    final AppParamService appParamService;
 
-    public Router(TicketService ticketService, ContestantService contestantService, EmailService emailService, OrderService orderService, MessageService messageService, MailQueueService mailQueueService) {
+    public Router(TicketService ticketService, ContestantService contestantService, EmailService emailService, OrderService orderService, MessageService messageService, MailQueueService mailQueueService, AppParamService appParamService) {
         this.ticketService = ticketService;
         this.contestantService = contestantService;
         this.emailService = emailService;
         this.orderService = orderService;
         this.messageService = messageService;
         this.mailQueueService = mailQueueService;
+        this.appParamService = appParamService;
     }
 
     @PostMapping("/vote")
@@ -50,37 +50,80 @@ public class Router {
                 names.add(name);
             }
         }
+        String email = req.getParameter("email1");
         if (names.size() > 2) {
             try {
-                resp.sendRedirect("/?error=vote greater than three!");
+                resp.sendRedirect("/?error=vote greater than three !");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return;
-        } else if (!emailService.getAllEmails().contains(req.getParameter("email"))) {
+        } else if (email == null || "".equals(email) || !email.contains("@")) {
             try {
-                resp.sendRedirect("/?error=email not found!");
+                resp.sendRedirect("/?error=Email format is incorrect !");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return;
-        } else if (emailService.isVoted(req.getParameter("email"))) {
+        } else if (!emailService.getAllEmails().contains(email)) {
             try {
-                resp.sendRedirect("/?error=You already voted!");
+                resp.sendRedirect("/?error=email not found !");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        } else if (emailService.isVoted(email)) {
+            try {
+                resp.sendRedirect("/?error=You already voted !");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return;
         }
-        emailService.vote(req.getParameter("email"));
+        String sdt = appParamService.getAppParamByKey("voteStartDateTime");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        df.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
+        Timestamp startDateTime = null;
+        try {
+            startDateTime = new Timestamp(df.parse(sdt).getTime());
+        } catch (ParseException e) {
+        }
+        Timestamp currentDateTime = new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("America/Vancouver")).getTime().getTime());
+        long second = (startDateTime.getTime() - currentDateTime.getTime()) / 1000;
+        if (second > 0) {
+            try {
+                resp.sendRedirect("/?error=Voting has not started yet, please try again later !");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        emailService.vote(email);
         for (String s : names) {
             contestantService.voteByName(s);
         }
         try {
-            resp.sendRedirect("/");
+            resp.sendRedirect("/?message=Thanks for voting !");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @GetMapping("/")
+    public ModelAndView index() {
+        ModelAndView mv = new ModelAndView("index");
+        String sdt = appParamService.getAppParamByKey("voteStartDateTime");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        df.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
+        Timestamp startDateTime = null;
+        try {
+            startDateTime = new Timestamp(df.parse(sdt).getTime());
+        } catch (ParseException e) {
+        }
+        Timestamp currentDateTime = new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("America/Vancouver")).getTime().getTime());
+        long second = (startDateTime.getTime() - currentDateTime.getTime()) / 1000;
+        mv.addObject("second", second);
+        return mv;
     }
 
     @GetMapping("/admin")
@@ -90,6 +133,18 @@ public class Router {
         mv.addObject("contestants", contestants);
         mv.addObject("sum", contestantService.getNumOfBallots());
         mv.addObject("num", ticketService.getAllTickets().size());
+        String voteStartDateTime = appParamService.getAppParamByKey("voteStartDateTime");
+        String date = voteStartDateTime.split(" ")[0];
+        String time = voteStartDateTime.split(" ")[1];
+        time = time.substring(0, 5);
+        mv.addObject("date", date);
+        mv.addObject("time", time);
+        String enableVerificationCode = appParamService.getAppParamByKey("enableVerificationCode");
+        if (enableVerificationCode.equals("false")) {
+            mv.addObject("enableVerificationCode", false);
+        } else if (enableVerificationCode.equals("true")) {
+            mv.addObject("enableVerificationCode", true);
+        }
         return mv;
     }
 
@@ -357,6 +412,53 @@ public class Router {
         } while (ticket == null && i++ < 100);
         mv.addObject("winner", ticket.getNumber());
         return mv;
+    }
+
+    @PostMapping("/admin")
+    public void setAppParam(HttpServletRequest request, HttpServletResponse response) {
+        String date = request.getParameter("startDate");
+        String time = request.getParameter("startTime");
+        String verify = request.getParameter("verification");
+        System.out.println(verify);
+        if (date == null || "".equals(date)) {
+            try {
+                response.sendRedirect("/admin?paramError=Please select a date !");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (time == null || "".equals(time)) {
+            try {
+                response.sendRedirect("/admin?paramError=Please select a time !");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        String sdt = date + " " + time;
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        df.setTimeZone(TimeZone.getTimeZone("America/Vancouver"));
+        Timestamp startDateTime = null;
+        try {
+            startDateTime = new Timestamp(df.parse(sdt).getTime());
+        } catch (ParseException e) {
+            try {
+                response.sendRedirect("/admin?paramError=Date or Time selection error !");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+        appParamService.setAppParamByKey("voteStartDateTime", sdt);
+        if (verify == null || "".equals(verify)) {
+            verify = "false";
+        } else if ("on".equals(verify)) {
+            verify = "true";
+        }
+        appParamService.setAppParamByKey("enableVerificationCode", verify);
+        try {
+            response.sendRedirect("/admin");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
