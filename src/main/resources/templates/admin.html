@@ -75,14 +75,22 @@
                     <input name="startDate" th:value="${date}" class="form-control" type="date" min="2020-12-04" style="max-width: 200px;">
                     <input name="startTime" th:value="${time}" class="form-control" type="time" style="max-width: 120px;">
                 </div>
-                <div class="form-group mb-3 input-group-lg">
-                    <label for="exampleFormControlSelect1">Each person can only cast votes</label>
-                    <select class="form-control" id="exampleFormControlSelect1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                <div class="form-group mb-3 input-group-sm">
+                    <label for="votesPerPerson">Each person can only cast votes</label>
+                    <span th:text="${votesPerPerson}"></span>
+                    <span th:text="${#strings.equals(votesPerPerson,'1')} ? 'selected': '1'"></span>
+                    <span th:text="${#strings.equals(votesPerPerson,'7')} ? 'selected': '7'"></span>
+                    <select name="votesPerPerson" class="form-control" id="votesPerPerson">
+                        <option value="1" th:selected="${#strings.equals(votesPerPerson,'1')} ? 'true': 'false'">1</option>
+                        <option value="2" th:selected="${#strings.equals(votesPerPerson,'2')} ? 'true': 'false'">2</option>
+                        <option value="3" th:selected="${#strings.equals(votesPerPerson,'3')} ? 'true': 'false'">3</option>
+                        <option value="4" th:selected="${#strings.equals(votesPerPerson,'4')} ? 'true': 'false'">4</option>
+                        <option value="5" th:selected="${#strings.equals(votesPerPerson,'5')} ? 'true': 'false'">5</option>
+                        <option value="6" th:selected="${#strings.equals(votesPerPerson,'6')} ? 'true': 'false'">6</option>
+                        <option value="7" th:selected="${#strings.equals(votesPerPerson,'7')} ? 'true': 'false'">7</option>
+                        <option value="8" th:selected="${#strings.equals(votesPerPerson,'8')} ? 'true': 'false'">8</option>
+                        <option value="9" th:selected="${#strings.equals(votesPerPerson,'9')} ? 'true': 'false'">9</option>
+                        <option value="10" th:selected="${#strings.equals(votesPerPerson,'10')} ? 'true': 'false'">10</option>
                     </select>
                 </div>
                 <div class="custom-control custom-switch">

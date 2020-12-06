@@ -50,10 +50,10 @@ public class Router {
             }
         }
         String email = req.getParameter("email1");
-        int ballotPerPerson = Integer.valueOf(appParamService.getAppParamByKey("ballotPerPerson"));
-        if (names.size() > ballotPerPerson) {
+        int votesPerPerson = Integer.valueOf(appParamService.getAppParamByKey("votesPerPerson"));
+        if (names.size() > votesPerPerson) {
             try {
-                resp.sendRedirect("/?error=vote greater than " + ballotPerPerson + "!");
+                resp.sendRedirect("/?error=vote greater than " + votesPerPerson + "!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -72,9 +72,9 @@ public class Router {
                 e.printStackTrace();
             }
             return;
-        } else if (ballotService.getBallotsByEmail(email).size() + names.size() > ballotPerPerson) {
+        } else if (ballotService.getBallotsByEmail(email).size() + names.size() > votesPerPerson) {
             try {
-                resp.sendRedirect("/?error=Each person can only cast " + ballotPerPerson + " votes!");
+                resp.sendRedirect("/?error=Each person can only cast " + votesPerPerson + " votes!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -160,6 +160,8 @@ public class Router {
         time = time.substring(0, 5);
         mv.addObject("date", date);
         mv.addObject("time", time);
+        String votesPerPerson = appParamService.getAppParamByKey("votesPerPerson");
+        mv.addObject("votesPerPerson", votesPerPerson);
         String enableVerificationCode = appParamService.getAppParamByKey("enableVerificationCode");
         if (enableVerificationCode.equals("false")) {
             mv.addObject("enableVerificationCode", false);
@@ -438,14 +440,15 @@ public class Router {
     public void setAppParam(HttpServletRequest request, HttpServletResponse response) {
         String date = request.getParameter("startDate");
         String time = request.getParameter("startTime");
+        String vpp = request.getParameter("votesPerPerson");
         String verify = request.getParameter("verification");
-        System.out.println(verify);
         if (date == null || "".equals(date)) {
             try {
                 response.sendRedirect("/admin?paramError=Please select a date !");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return;
         }
         if (time == null || "".equals(time)) {
             try {
@@ -453,6 +456,7 @@ public class Router {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return;
         }
         String sdt = date + " " + time;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -466,6 +470,7 @@ public class Router {
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
+            return;
         }
         appParamService.setAppParamByKey("voteStartDateTime", sdt);
         if (verify == null || "".equals(verify)) {
@@ -473,6 +478,26 @@ public class Router {
         } else if ("on".equals(verify)) {
             verify = "true";
         }
+        int votesPerPerson = 0;
+        try {
+            votesPerPerson = Integer.valueOf(vpp);
+        } catch (NumberFormatException e) {
+            try {
+                response.sendRedirect("/admin?paramError=Each person can only cast votes selection error !");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            return;
+        }
+        if (votesPerPerson <= 0 || votesPerPerson > 10) {
+            try {
+                response.sendRedirect("/admin?paramError=Each person can only cast votes between 1 to 10 !");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            return;
+        }
+        appParamService.setAppParamByKey("votesPerPerson", new Integer(votesPerPerson).toString());
         appParamService.setAppParamByKey("enableVerificationCode", verify);
         try {
             response.sendRedirect("/admin");

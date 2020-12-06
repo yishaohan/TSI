@@ -42,13 +42,15 @@
             var email = document.getElementById("email1");
             var votes = document.getElementsByClassName("form-check-input");
             var cnt = 0;
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < votes.length; i++) {
                 if (votes[i] && votes[i].checked) cnt++;
             }
-            if (email.value == 0) {
+            if (email.value == "") {
                 alert("you haven't enter your email!");
-            } else if (cnt > 2) {
-                alert("vote greater than 2");
+            } else if (email.value.indexOf("@") == -1 || email.value.indexOf(".") == -1) {
+                alert("Email format is incorrect!");
+            } else if (cnt <= 0) {
+                alert("Please choose a candidate!");
             } else {
                 document.forms[0].submit();
             }
@@ -236,7 +238,7 @@
                 <div style="text-align: center;">
                     <div style="margin-bottom: 1.25rem;">
                         <select id="item-options">
-                            <option value="50/50 ticket" price="5.00">50/50 ticket - 5.00 USD</option>
+                            <option value="50/50 ticket" price="5.00">50/50 ticket - 5.00 CAD</option>
                         </select>
                         <select style="visibility: hidden" id="quantitySelect">
                             <option value="1">1</option>
@@ -282,8 +284,9 @@
 </div>
 
 <script
-        src="https://www.paypal.com/sdk/js?client-id=AYsnjLgEmwy2RIhy0QdO335NCySWCFKnxecxVmVhTVUxLE8hdw_ZNs1LvGD5sH61BErt2JxRuTc7I9Pn&currency=CAD"
-        data-sdk-integration-source="button-factory"></script>
+        src="https://www.paypal.com/sdk/js?client-id=AYsnjLgEmwy2RIhy0QdO335NCySWCFKnxecxVmVhTVUxLE8hdw_ZNs1LvGD5sH61BErt2JxRuTc7I9Pn&currency=CAD" data-sdk-integration-source="button-factory">
+</script>
+
 <script>
     function initPayPalButton() {
         var shipping = 0;
@@ -427,12 +430,6 @@
 </script>
 
 <script>
-    // var hour = document.querySelector('.hour');
-    // var minute = document.querySelector('.minute');
-    // var second = document.querySelector('.second');
-
-    // countDown(1000);
-
     function countDown(times) {
         var timer = setInterval(function () {
             if (times <= 0) {
