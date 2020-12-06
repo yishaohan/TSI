@@ -6,7 +6,6 @@ import com.ysh.talentshowintro.model.*;
 import com.ysh.talentshowintro.paypal.Credentials;
 import com.ysh.talentshowintro.service.*;
 import com.ysh.talentshowintro.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,25 +23,25 @@ import java.util.*;
 @Controller
 public class Router {
     final TicketService ticketService;
-    final ContestantService contestantService;
-    final EmailService emailService;
+    final BallotService ballotService;
     final OrderService orderService;
     final MessageService messageService;
     final MailQueueService mailQueueService;
     final AppParamService appParamService;
+    final CandidateService candidateService;
 
-    public Router(TicketService ticketService, ContestantService contestantService, EmailService emailService, OrderService orderService, MessageService messageService, MailQueueService mailQueueService, AppParamService appParamService) {
+    public Router(TicketService ticketService, BallotService ballotService, OrderService orderService, MessageService messageService, MailQueueService mailQueueService, AppParamService appParamService, CandidateService candidateService) {
         this.ticketService = ticketService;
-        this.contestantService = contestantService;
-        this.emailService = emailService;
+        this.ballotService = ballotService;
         this.orderService = orderService;
         this.messageService = messageService;
         this.mailQueueService = mailQueueService;
         this.appParamService = appParamService;
+        this.candidateService = candidateService;
     }
 
     @PostMapping("/vote")
-    public void getVote(HttpServletRequest req, HttpServletResponse resp) {
+    public void vote(HttpServletRequest req, HttpServletResponse resp) {
         List<String> names = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             String name = req.getParameter("vote" + i);
@@ -51,30 +50,31 @@ public class Router {
             }
         }
         String email = req.getParameter("email1");
-        if (names.size() > 2) {
+        int ballotPerPerson = Integer.valueOf(appParamService.getAppParamByKey("ballotPerPerson"));
+        if (names.size() > ballotPerPerson) {
             try {
                 resp.sendRedirect("/?error=vote greater than three !");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return;
-        } else if (email == null || "".equals(email) || !email.contains("@")) {
+        } else if (names.size() <= 0) {
+            try {
+                resp.sendRedirect("/?error=Please choose a candidate !");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        } else if (email == null || "".equals(email) || !email.contains("@") || !email.contains(".")) {
             try {
                 resp.sendRedirect("/?error=Email format is incorrect !");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return;
-        } else if (!emailService.getAllEmails().contains(email)) {
+        } else if (ballotService.getBallotsByEmail(email).size() + names.size() > ballotPerPerson) {
             try {
-                resp.sendRedirect("/?error=email not found !");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return;
-        } else if (emailService.isVoted(email)) {
-            try {
-                resp.sendRedirect("/?error=You already voted !");
+                resp.sendRedirect("/?error=Each person can only cast " + ballotPerPerson + " votes!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -87,6 +87,12 @@ public class Router {
         try {
             startDateTime = new Timestamp(df.parse(sdt).getTime());
         } catch (ParseException e) {
+            try {
+                resp.sendRedirect("/?error=The date or time is incorrect, please select again !");
+            } catch (IOException ee) {
+                ee.printStackTrace();
+            }
+            return;
         }
         Timestamp currentDateTime = new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("America/Vancouver")).getTime().getTime());
         long second = (startDateTime.getTime() - currentDateTime.getTime()) / 1000;
@@ -98,12 +104,26 @@ public class Router {
             }
             return;
         }
-        emailService.vote(email);
-        for (String s : names) {
-            contestantService.voteByName(s);
+        String error = null;
+        for (String name : names) {
+            Candidate candidate = candidateService.getCandidateByName(name);
+            if (candidate == null) {
+                error = name + " ";
+                continue;
+            }
+            Ballot ballot = new Ballot();
+            ballot.setVoter(email);
+            ballot.setCandidate(name);
+            ballot.setCreateDateTime(new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("America/Vancouver")).getTime().getTime()));
+            ballotService.saveBallot(ballot);
+            candidateService.vote(candidate);
         }
         try {
-            resp.sendRedirect("/?message=Thanks for voting !");
+            if (error == null) {
+                resp.sendRedirect("/?message=Thanks for voting !");
+            } else {
+                resp.sendRedirect("/?error=[" + error + "] Candidate does not exist");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -129,10 +149,10 @@ public class Router {
     @GetMapping("/admin")
     public ModelAndView getAdmin(HttpServletRequest req) {
         ModelAndView mv = new ModelAndView("admin");
-        List<Contestant> contestants = contestantService.getContestants();
-        mv.addObject("contestants", contestants);
-        mv.addObject("sum", contestantService.getNumOfBallots());
-        mv.addObject("num", ticketService.getAllTickets().size());
+        List<Candidate> candidates = candidateService.getAllCandidates();
+        mv.addObject("candidates", candidates);
+        mv.addObject("ballotsNumber", ballotService.getAllBallotsNumbers());
+        mv.addObject("ticketsNumbers", ticketService.getAllTickets().size());
         String voteStartDateTime = appParamService.getAppParamByKey("voteStartDateTime");
         String date = voteStartDateTime.split(" ")[0];
         String time = voteStartDateTime.split(" ")[1];

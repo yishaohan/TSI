@@ -28,13 +28,13 @@
             <h1>Vote Progress</h1>
         </div>
         <ul class="list-group w-100">
-            <li th:each="contestant, stat : ${contestants}" class="list-group-item mb-2">
-                <span th:text="${contestant.getName() + ' '}"></span>
-                <span th:text="${contestant.getBallotCount() + ' votes'}" class="text-info"></span>
+            <li th:each="candidate : ${candidates}" class="list-group-item mb-2">
+                <span th:text="${candidate.getName() + ' '}"></span>
+                <span th:text="${candidate.getVotes() + ' votes'}" class="text-info"></span>
                 <div class="progress">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                         th:style="|width: ${1.0 * contestant.getBallotCount() / sum * 100}%;|"
-                         th:text="|${#numbers.formatInteger((1.0 * contestant.getBallotCount() / sum * 100),1)}%|"></div>
+                         th:style="|width: ${1.0 * candidate.getVotes() / ballotsNumber * 100}%;|"
+                         th:text="|${#numbers.formatInteger((1.0 * candidate.getVotes() / ballotsNumber * 100),1)}%|"></div>
                 </div>
             </li>
         </ul>
@@ -56,7 +56,7 @@
         </div>
         <div class="w-100"></div>
         <div>
-            <h3 th:text="|We have selled ${num} tickets|">We have selled 30 tickets</h3>
+            <h3 th:text="|We have selled ${ticketsNumbers} tickets|">We have selled 30 tickets</h3>
         </div>
     </div>
     <div class="row bg-light p-5 mt-5">
@@ -74,6 +74,16 @@
                     </div>
                     <input name="startDate" th:value="${date}" class="form-control" type="date" min="2020-12-04" style="max-width: 200px;">
                     <input name="startTime" th:value="${time}" class="form-control" type="time" style="max-width: 120px;">
+                </div>
+                <div class="form-group mb-3 input-group-lg">
+                    <label for="exampleFormControlSelect1">Each person can only cast votes</label>
+                    <select class="form-control" id="exampleFormControlSelect1">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
                 </div>
                 <div class="custom-control custom-switch">
                     <input name="verification" th:checked="${enableVerificationCode}" type="checkbox" class="custom-control-input" id="customSwitch1">
