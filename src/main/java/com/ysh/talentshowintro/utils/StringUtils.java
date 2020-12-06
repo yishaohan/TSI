@@ -6,7 +6,7 @@ import java.util.Date;
 public class StringUtils {
     public static String isNull(String param) {
         if (param == null || "".equals(param)) {
-            param = "unkonw";
+            param = "unknown";
         }
         return param;
     }

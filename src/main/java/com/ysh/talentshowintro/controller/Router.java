@@ -53,7 +53,7 @@ public class Router {
         int ballotPerPerson = Integer.valueOf(appParamService.getAppParamByKey("ballotPerPerson"));
         if (names.size() > ballotPerPerson) {
             try {
-                resp.sendRedirect("/?error=vote greater than three !");
+                resp.sendRedirect("/?error=vote greater than " + ballotPerPerson + "!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -122,7 +122,7 @@ public class Router {
             if (error == null) {
                 resp.sendRedirect("/?message=Thanks for voting !");
             } else {
-                resp.sendRedirect("/?error=[" + error + "] Candidate does not exist");
+                resp.sendRedirect("/?error=[ " + error + "] Candidate does not exist");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -139,6 +139,7 @@ public class Router {
         try {
             startDateTime = new Timestamp(df.parse(sdt).getTime());
         } catch (ParseException e) {
+            e.printStackTrace();
         }
         Timestamp currentDateTime = new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("America/Vancouver")).getTime().getTime());
         long second = (startDateTime.getTime() - currentDateTime.getTime()) / 1000;
@@ -205,16 +206,16 @@ public class Router {
         }
         customOrder.setUpdateDateTime(StringUtils.isNull(updateDateTime));
         final List<PurchaseUnit> purchaseUnits = order.purchaseUnits();
-        //为简化开发,只获取第一个商家的信息
+        //为简化开发,只获取第一个商品的信息
         PurchaseUnit purchaseUnit = purchaseUnits.get(0);
         if (purchaseUnit == null) {
             return "Error";
         }
         final Payee payee = purchaseUnit.payee();
         if (payee == null) {
-            customOrder.setPayeeClientID("");
-            customOrder.setPayeeEmail("");
-            customOrder.setPayeeMerchantID("");
+            customOrder.setPayeeClientID(StringUtils.isNull(""));
+            customOrder.setPayeeEmail(StringUtils.isNull(""));
+            customOrder.setPayeeMerchantID(StringUtils.isNull(""));
         } else {
             customOrder.setPayeeClientID(StringUtils.isNull(payee.clientId()));
             customOrder.setPayeeEmail(StringUtils.isNull(payee.email()));
@@ -222,9 +223,9 @@ public class Router {
         }
         final PayeeDisplayable payeeDisplayable = payee.payeeDisplayable();
         if (payeeDisplayable == null) {
-            customOrder.setPayeeDisplayBrandName("");
-            customOrder.setPayeeDisplayBusinessPhone("");
-            customOrder.setPayeeDisplayEmail("");
+            customOrder.setPayeeDisplayBrandName(StringUtils.isNull(""));
+            customOrder.setPayeeDisplayBusinessPhone(StringUtils.isNull(""));
+            customOrder.setPayeeDisplayEmail(StringUtils.isNull(""));
         } else {
             customOrder.setPayeeDisplayBrandName(StringUtils.isNull(payeeDisplayable.brandName()));
             final Phone phone = payeeDisplayable.businessPhone();
@@ -273,16 +274,16 @@ public class Router {
 //                    link.href();
 //                }
         //为简化开发,只计算合计的数量
-        int total = 0;
+        int quantity = 0;
         final List<Item> items = purchaseUnit.items();
         for (final Item item : items) {
             item.name();
-            total += Integer.valueOf(item.quantity());
+            quantity += Integer.valueOf(item.quantity());
             final Money money = item.unitAmount();
             money.value();
             money.currencyCode();
         }
-        customOrder.setQuantity(total);
+        customOrder.setQuantity(quantity);
 //        }
 //        final List<LinkDescription> links = order.links();
 //        for (final LinkDescription link : links) {
@@ -297,9 +298,9 @@ public class Router {
             customOrder.setPayerID(StringUtils.isNull(payer.payerId()));
             final Name name = payer.name();
             if (name == null) {
-                customOrder.setPayerFullName("");
-                customOrder.setPayerGivenName("");
-                customOrder.setPayerSurname("");
+                customOrder.setPayerFullName(StringUtils.isNull(""));
+                customOrder.setPayerGivenName(StringUtils.isNull(""));
+                customOrder.setPayerSurname(StringUtils.isNull(""));
             } else {
                 customOrder.setPayerFullName(StringUtils.isNull(name.fullName()));
                 customOrder.setPayerGivenName(StringUtils.isNull(name.givenName()));
@@ -307,8 +308,8 @@ public class Router {
             }
             final PhoneWithType phoneWithType = payer.phoneWithType();
             if (phoneWithType == null) {
-                customOrder.setPayerPhoneType("");
-                customOrder.setPayerPhoneNumber("");
+                customOrder.setPayerPhoneType(StringUtils.isNull(""));
+                customOrder.setPayerPhoneNumber(StringUtils.isNull(""));
             } else {
                 customOrder.setPayerPhoneType(StringUtils.isNull(phoneWithType.phoneType()));
                 final Phone phone1 = phoneWithType.phoneNumber();
@@ -318,15 +319,15 @@ public class Router {
             customOrder.setPayerEmail(StringUtils.isNull(payer.email()));
             final AddressPortable addressPortable = payer.addressPortable();
             if (addressPortable == null) {
-                customOrder.setPayerCountryCode("");
-                customOrder.setPayerPostalCode("");
-                customOrder.setPayerAddressLine1("");
-                customOrder.setPayerAddressLine2("");
-                customOrder.setPayerAddressLine3("");
-                customOrder.setPayerAdminArea1("");
-                customOrder.setPayerAdminArea2("");
-                customOrder.setPayerAdminArea3("");
-                customOrder.setPayerAdminArea4("");
+                customOrder.setPayerCountryCode(StringUtils.isNull(""));
+                customOrder.setPayerPostalCode(StringUtils.isNull(""));
+                customOrder.setPayerAddressLine1(StringUtils.isNull(""));
+                customOrder.setPayerAddressLine2(StringUtils.isNull(""));
+                customOrder.setPayerAddressLine3(StringUtils.isNull(""));
+                customOrder.setPayerAdminArea1(StringUtils.isNull(""));
+                customOrder.setPayerAdminArea2(StringUtils.isNull(""));
+                customOrder.setPayerAdminArea3(StringUtils.isNull(""));
+                customOrder.setPayerAdminArea4(StringUtils.isNull(""));
             } else {
                 customOrder.setPayerCountryCode(StringUtils.isNull(addressPortable.countryCode()));
                 customOrder.setPayerPostalCode(StringUtils.isNull(addressPortable.postalCode()));
@@ -366,10 +367,8 @@ public class Router {
 //        order.setPayerEmail(StringUtils.isNull(req.getParameter("payerEmail")));
         orderService.save(customOrder);
 
-        int quantity = customOrder.getQuantity();
         List<Ticket> tickets = (List<Ticket>) req.getSession().getAttribute("tickets");
         if (tickets == null) {
-            System.out.println("tickets is null");
             tickets = new ArrayList<Ticket>();
             req.getSession().setAttribute("tickets", tickets);
         }
@@ -387,7 +386,8 @@ public class Router {
             ticketService.save(ticket);
             tickets.add(ticket);
         }
-        mailQueueService.addMail(StringUtils.isNull(email), null, null, "彩票回执", "sendVoteMail", tickets, null);
+        mailQueueService.addMail(StringUtils.isNull(email), null, null, "Ticket Receipt", "sendVoteMail", tickets,
+                null);
         return "Success";
     }
 

@@ -202,7 +202,7 @@
                             </div>
                         </div>
                     </div>
-                    <button id="voted" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
+                    <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
                 </form>
             </div>
         </div>
@@ -436,12 +436,12 @@
     function countDown(times) {
         var timer = setInterval(function () {
             if (times <= 0) {
-                document.getElementById("voted").innerHTML = "Submit";
-                document.getElementById("voted").disabled = false;
+                document.getElementById("vote").innerHTML = "Submit";
+                document.getElementById("vote").disabled = false;
                 clearInterval(timer);
                 return;
             }
-            var h = parseInt(times / 60 / 60 % 24);
+            var h = parseInt(times / 60 / 60);
             h = h < 10 ? '0' + h : h;
             var m = parseInt(times / 60 % 60);
             m = m < 10 ? '0' + m : m;
@@ -449,7 +449,7 @@
             s = s < 10 ? '0' + s : s;
             times = times - 1;
             var temp = "" + h + " : " + m + " : " + s;
-            document.getElementById("voted").innerHTML = temp;
+            document.getElementById("vote").innerHTML = temp;
         }, 1000);
     }
 </script>
