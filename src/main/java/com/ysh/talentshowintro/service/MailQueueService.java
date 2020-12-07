@@ -41,10 +41,10 @@ public class MailQueueService {
             }
             mail.setSubject(StringUtils.isNull(subject));
             String context = "";
-            if ("sendVoteMail".equals(template)) {
+            if ("sendBallotMail".equals(template)) {
                 Context ctx = new Context();
                 ctx.setVariable("tickets", tickets);
-                context = templateEngine.process("sendVoteMail.html", ctx);
+                context = templateEngine.process("sendBallotMail.html", ctx);
 
             } else if ("sendWarnMail".equals(template)) {
                 Context ctx = new Context();

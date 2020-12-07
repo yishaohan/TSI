@@ -264,10 +264,6 @@
                 </div>
             </div>
 
-            <!--            <form action="/ticket" method="post">-->
-            <!--                <button type="submit" class="btn btn-primary show-toast" onclick="toast()">Buy</button>-->
-            <!--            </form>-->
-
         </div>
         <div class="col-md p-4 card">
             <img src="../static/image/donate.jpeg" th:src="@{/image/donate.jpeg}" class="card-img-top" alt="...">
@@ -279,7 +275,8 @@
             <div class="" id="smart-button-container2">
                 <div class="form-group mb-0">
                     <small class="alert alert-danger form-text mt-0 mb-1 py-0 text-center" id="descriptionError" style="visibility: hidden;">Please enter a description</small>
-                    <input class="form-control form-control-sm" type="text" name="descriptionInput" id="description" maxlength="127" value="" placeholder="Please write something ......">
+                    <input class="form-control form-control-sm" type="text" name="descriptionInput" id="description"
+                           maxlength="127" value="" placeholder="Please enter a description">
                 </div>
                 <div class="form-group">
                     <small class="alert alert-danger form-text mt-1 mb-1 py-0 text-center" id="priceLabelError" style="visibility: hidden;">Please enter a price</small>
@@ -533,24 +530,24 @@
   within the "twitch-embed" root element.
 -->
 
-<!--<script src="https://embed.twitch.tv/embed/v1.js"></script>-->
+<script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-<!--<script type="text/javascript">-->
-<!--    var embed = new Twitch.Embed("twitch-embed", {-->
-<!--        width: "100%",-->
-<!--        height: 480,-->
-<!--        channel: "monstercat",-->
-<!--        layout: "video-with-chat",-->
-<!--        autoplay: true,-->
-<!--        // only needed if your site is also embedded on embed.example.com and othersite.example.com-->
-<!--        parent: ["xclass.highspeed.vip"]-->
-<!--    });-->
+<script type="text/javascript">
+    var embed = new Twitch.Embed("twitch-embed", {
+        width: "100%",
+        height: 480,
+        channel: "monstercat",
+        layout: "video-with-chat",
+        autoplay: true,
+        // only needed if your site is also embedded on embed.example.com and othersite.example.com
+        parent: ["xclass.highspeed.vip"]
+    });
 
-<!--    embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {-->
-<!--        var player = embed.getPlayer();-->
-<!--        player.play();-->
-<!--    });-->
-<!--</script>-->
+    embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+        var player = embed.getPlayer();
+        player.play();
+    });
+</script>
 
 <script>
     function countDown(times) {

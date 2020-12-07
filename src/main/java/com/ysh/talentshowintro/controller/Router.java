@@ -464,7 +464,7 @@ public class Router {
         message.setSubject("Canceled Order !");
         message.setMessage("[" + StringUtils.isNull(req.getParameter("orderType")) + "]" + StringUtils.isNull(req.getParameter("message")));
         messageService.save(message);
-        mailQueueService.addMail("henryyi2005@gmail.com", null, null, "已取消的订单", "sendWarnMail", null, message);
+        mailQueueService.addMail("henryyi2005@gmail.com", null, null, "Order cancelled", "sendWarnMail", null, message);
         try {
             resp.sendRedirect("/");
         } catch (IOException e) {
@@ -479,7 +479,7 @@ public class Router {
         message.setSubject("Wrong Order !");
         message.setMessage("[" + StringUtils.isNull(req.getParameter("orderType")) + "]" + StringUtils.isNull(req.getParameter("message")));
         messageService.save(message);
-        mailQueueService.addMail("henryyi2005@gmail.com", null, null, "错误订单", "sendWarnMail", null, message);
+        mailQueueService.addMail("henryyi2005@gmail.com", null, null, "Order Error", "sendWarnMail", null, message);
         try {
             resp.sendRedirect("/");
         } catch (IOException e) {

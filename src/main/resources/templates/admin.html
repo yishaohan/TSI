@@ -77,9 +77,6 @@
                 </div>
                 <div class="form-group mb-3 input-group-sm">
                     <label for="votesPerPerson">Each person can only cast votes</label>
-                    <span th:text="${votesPerPerson}"></span>
-                    <span th:text="${#strings.equals(votesPerPerson,'1')} ? 'selected': '1'"></span>
-                    <span th:text="${#strings.equals(votesPerPerson,'7')} ? 'selected': '7'"></span>
                     <select name="votesPerPerson" class="form-control" id="votesPerPerson">
                         <option value="1" th:selected="${#strings.equals(votesPerPerson,'1')} ? 'true': 'false'">1</option>
                         <option value="2" th:selected="${#strings.equals(votesPerPerson,'2')} ? 'true': 'false'">2</option>
@@ -95,7 +92,7 @@
                 </div>
                 <div class="custom-control custom-switch">
                     <input name="verification" th:checked="${enableVerificationCode}" type="checkbox" class="custom-control-input" id="customSwitch1">
-                    <label class="custom-control-label" for="customSwitch1">验证码</label>
+                    <label class="custom-control-label" for="customSwitch1">Verification code</label>
                 </div>
                 <div class="row justify-content-center mt-2">
                     <button class="btn btn-outline-success rounded-pill" style="min-width: 188px;" type="submit">
