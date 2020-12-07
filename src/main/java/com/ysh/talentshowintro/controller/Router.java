@@ -174,75 +174,120 @@ public class Router {
     @GetMapping("/captureOrder")
     @ResponseBody
     public String captureOrder(HttpServletRequest req) {
-        String reqID = req.getParameter("id");
-        String email = req.getParameter("email");
-        if (reqID == null || "".equals(reqID) || email == null || "".equals(email)) {
-            return "Error";
-        }
-        CustomOrder customOrder = new CustomOrder();
-        OrdersGetRequest request = new OrdersGetRequest(reqID);
-        HttpResponse<Order> response = null;
+        Message message = new Message();
+        message.setCreateDateTime(new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime().getTime()));
         try {
-            response = Credentials.paypalClient.execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (response == null) {
-            return "Error";
-        }
-        Order order = response.result();
-        if (order == null) {
-            return "Error";
-        }
-        customOrder.setOrderID(StringUtils.isNull(order.id()));
-        customOrder.setIntent(StringUtils.isNull(order.checkoutPaymentIntent()));
-        customOrder.setOrderStatus(StringUtils.isNull(order.status()));
-        String ut = StringUtils.isNull(order.updateTime());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Timestamp updateDateTime = null;
-        try {
-            updateDateTime = new Timestamp(df.parse(ut).getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        customOrder.setUpdateDateTime(StringUtils.isNull(updateDateTime));
-        final List<PurchaseUnit> purchaseUnits = order.purchaseUnits();
-        //为简化开发,只获取第一个商品的信息
-        PurchaseUnit purchaseUnit = purchaseUnits.get(0);
-        if (purchaseUnit == null) {
-            return "Error";
-        }
-        final Payee payee = purchaseUnit.payee();
-        if (payee == null) {
-            customOrder.setPayeeClientID(StringUtils.isNull(""));
-            customOrder.setPayeeEmail(StringUtils.isNull(""));
-            customOrder.setPayeeMerchantID(StringUtils.isNull(""));
-        } else {
-            customOrder.setPayeeClientID(StringUtils.isNull(payee.clientId()));
-            customOrder.setPayeeEmail(StringUtils.isNull(payee.email()));
-            customOrder.setPayeeMerchantID(StringUtils.isNull(payee.merchantId()));
-        }
-        final PayeeDisplayable payeeDisplayable = payee.payeeDisplayable();
-        if (payeeDisplayable == null) {
-            customOrder.setPayeeDisplayBrandName(StringUtils.isNull(""));
-            customOrder.setPayeeDisplayBusinessPhone(StringUtils.isNull(""));
-            customOrder.setPayeeDisplayEmail(StringUtils.isNull(""));
-        } else {
-            customOrder.setPayeeDisplayBrandName(StringUtils.isNull(payeeDisplayable.brandName()));
-            final Phone phone = payeeDisplayable.businessPhone();
-            String tmp = "" + phone.countryCallingCode() + " " + phone.nationalNumber() + " " + phone.extensionNumber();
-            customOrder.setPayeeDisplayBusinessPhone(StringUtils.isNull(tmp));
-            customOrder.setPayeeDisplayEmail(StringUtils.isNull(payeeDisplayable.email()));
-        }
-        final AmountWithBreakdown amountWithBreakdown = purchaseUnit.amountWithBreakdown();
-        if (amountWithBreakdown == null) {
-            customOrder.setAmountValue("");
-            customOrder.setAmountCurrencyCode("");
-        } else {
-            customOrder.setAmountValue(StringUtils.isNull(amountWithBreakdown.value()));
-            customOrder.setAmountCurrencyCode(StringUtils.isNull(amountWithBreakdown.currencyCode()));
-        }
+            String error = "";
+            String reqID = req.getParameter("id");
+            if (reqID == null || "".equals(reqID)) {
+                error += "Order ID not Found !";
+                message.setSubject("Error Order");
+                message.setMessage(error);
+                messageService.save(message);
+                return error;
+            }
+            String orderType = req.getParameter("orderType");
+            if (orderType == null || "".equals(orderType)) {
+                orderType = "NULL";
+                error += "Order Type not Found !";
+            } else if (!"lottery".equals(orderType) && !"fundraising".equals(orderType)) {
+                orderType = "Wrong Order Type[" + orderType + "]";
+                error += "Wrong Order Type !";
+            }
+            String email = "";
+            String description = "";
+            if ("lottery".equals(orderType)) {
+                email = req.getParameter("email");
+                if (email == null || "".equals(email) || !email.contains("@") || !email.contains(".")) {
+                    email = "yishaohan@icloud.com";
+                    error += "Wrong Email !";
+                }
+            } else if ("fundraising".equals(orderType)) {
+                description = req.getParameter("description");
+                if (description == null || "".equals(description)) {
+                    description = "unknown";
+                    error += "description is NULL !";
+                }
+            }
+            CustomOrder customOrder = new CustomOrder();
+            OrdersGetRequest request = new OrdersGetRequest(reqID);
+            HttpResponse<Order> response = null;
+            try {
+                response = Credentials.paypalClient.execute(request);
+            } catch (IOException e) {
+                error += "Network Error !";
+                message.setSubject("Error Order");
+                message.setMessage(error + e);
+                messageService.save(message);
+                e.printStackTrace();
+                return error;
+            }
+            if (response == null) {
+                error += "Network response is NULL !";
+                message.setSubject("Error Order");
+                message.setMessage(error);
+                messageService.save(message);
+                return error;
+            }
+            Order order = response.result();
+            if (order == null) {
+                error += "Order information is NULL !";
+                message.setSubject("Error Order");
+                message.setMessage(error);
+                messageService.save(message);
+                return error;
+            }
+            customOrder.setOrderID(StringUtils.isNull(order.id()));
+            customOrder.setOrderType(StringUtils.isNull(orderType));
+            customOrder.setIntent(StringUtils.isNull(order.checkoutPaymentIntent()));
+            customOrder.setOrderStatus(StringUtils.isNull(order.status()));
+            String ut = StringUtils.isNull(order.updateTime());
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            df.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Timestamp updateDateTime = null;
+            try {
+                updateDateTime = new Timestamp(df.parse(ut).getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            customOrder.setUpdateDateTime(StringUtils.isNull(updateDateTime));
+            customOrder.setDescription(description);
+            final List<PurchaseUnit> purchaseUnits = order.purchaseUnits();
+            //为简化开发,只获取第一个商品的信息
+            PurchaseUnit purchaseUnit = purchaseUnits.get(0);
+            if (purchaseUnit == null) {
+                error += "purchaseUnit Object is NULL !";
+            }
+            final Payee payee = purchaseUnit.payee();
+            if (payee == null) {
+                customOrder.setPayeeClientID(StringUtils.isNull(""));
+                customOrder.setPayeeEmail(StringUtils.isNull(""));
+                customOrder.setPayeeMerchantID(StringUtils.isNull(""));
+            } else {
+                customOrder.setPayeeClientID(StringUtils.isNull(payee.clientId()));
+                customOrder.setPayeeEmail(StringUtils.isNull(payee.email()));
+                customOrder.setPayeeMerchantID(StringUtils.isNull(payee.merchantId()));
+            }
+            final PayeeDisplayable payeeDisplayable = payee.payeeDisplayable();
+            if (payeeDisplayable == null) {
+                customOrder.setPayeeDisplayBrandName(StringUtils.isNull(""));
+                customOrder.setPayeeDisplayBusinessPhone(StringUtils.isNull(""));
+                customOrder.setPayeeDisplayEmail(StringUtils.isNull(""));
+            } else {
+                customOrder.setPayeeDisplayBrandName(StringUtils.isNull(payeeDisplayable.brandName()));
+                final Phone phone = payeeDisplayable.businessPhone();
+                String tmp = "" + phone.countryCallingCode() + " " + phone.nationalNumber() + " " + phone.extensionNumber();
+                customOrder.setPayeeDisplayBusinessPhone(StringUtils.isNull(tmp));
+                customOrder.setPayeeDisplayEmail(StringUtils.isNull(payeeDisplayable.email()));
+            }
+            final AmountWithBreakdown amountWithBreakdown = purchaseUnit.amountWithBreakdown();
+            if (amountWithBreakdown == null) {
+                customOrder.setAmountValue("");
+                customOrder.setAmountCurrencyCode("");
+            } else {
+                customOrder.setAmountValue(StringUtils.isNull(amountWithBreakdown.value()));
+                customOrder.setAmountCurrencyCode(StringUtils.isNull(amountWithBreakdown.currencyCode()));
+            }
 //            final ShippingDetail shippingDetail = purchaseUnit.shippingDetail();
 //            final AddressPortable addressPortable = shippingDetail.addressPortable();
 //            addressPortable.countryCode();
@@ -275,17 +320,20 @@ public class Router {
 //                    link.rel();
 //                    link.href();
 //                }
-        //为简化开发,只计算合计的数量
-        int quantity = 0;
-        final List<Item> items = purchaseUnit.items();
-        for (final Item item : items) {
-            item.name();
-            quantity += Integer.valueOf(item.quantity());
-            final Money money = item.unitAmount();
-            money.value();
-            money.currencyCode();
-        }
-        customOrder.setQuantity(quantity);
+            //为简化开发,只计算合计的数量
+            int quantity = 0;
+            final List<Item> items = purchaseUnit.items();
+            if (items != null) {
+                for (final Item item : items) {
+                    item.name();
+                    quantity += Integer.valueOf(item.quantity());
+                    final Money money = item.unitAmount();
+                    money.value();
+                    money.currencyCode();
+                }
+            } else {
+                customOrder.setQuantity(quantity);
+            }
 //        }
 //        final List<LinkDescription> links = order.links();
 //        for (final LinkDescription link : links) {
@@ -293,55 +341,55 @@ public class Router {
 //            link.rel();
 //            link.href();
 //        }
-        final Payer payer = order.payer();
-        if (payer == null) {
-            return "Error";
-        } else {
-            customOrder.setPayerID(StringUtils.isNull(payer.payerId()));
-            final Name name = payer.name();
-            if (name == null) {
-                customOrder.setPayerFullName(StringUtils.isNull(""));
-                customOrder.setPayerGivenName(StringUtils.isNull(""));
-                customOrder.setPayerSurname(StringUtils.isNull(""));
+            final Payer payer = order.payer();
+            if (payer == null) {
+                error += "payer is NULL !";
             } else {
-                customOrder.setPayerFullName(StringUtils.isNull(name.fullName()));
-                customOrder.setPayerGivenName(StringUtils.isNull(name.givenName()));
-                customOrder.setPayerSurname(StringUtils.isNull(name.surname()));
+                customOrder.setPayerID(StringUtils.isNull(payer.payerId()));
+                final Name name = payer.name();
+                if (name == null) {
+                    customOrder.setPayerFullName(StringUtils.isNull(""));
+                    customOrder.setPayerGivenName(StringUtils.isNull(""));
+                    customOrder.setPayerSurname(StringUtils.isNull(""));
+                } else {
+                    customOrder.setPayerFullName(StringUtils.isNull(name.fullName()));
+                    customOrder.setPayerGivenName(StringUtils.isNull(name.givenName()));
+                    customOrder.setPayerSurname(StringUtils.isNull(name.surname()));
+                }
+                final PhoneWithType phoneWithType = payer.phoneWithType();
+                if (phoneWithType == null) {
+                    customOrder.setPayerPhoneType(StringUtils.isNull(""));
+                    customOrder.setPayerPhoneNumber(StringUtils.isNull(""));
+                } else {
+                    customOrder.setPayerPhoneType(StringUtils.isNull(phoneWithType.phoneType()));
+                    final Phone phone1 = phoneWithType.phoneNumber();
+                    String tmp = "" + phone1.countryCallingCode() + " " + phone1.nationalNumber() + " " + phone1.extensionNumber();
+                    customOrder.setPayerPhoneNumber(StringUtils.isNull(tmp));
+                }
+                customOrder.setPayerEmail(StringUtils.isNull(payer.email()));
+                final AddressPortable addressPortable = payer.addressPortable();
+                if (addressPortable == null) {
+                    customOrder.setPayerCountryCode(StringUtils.isNull(""));
+                    customOrder.setPayerPostalCode(StringUtils.isNull(""));
+                    customOrder.setPayerAddressLine1(StringUtils.isNull(""));
+                    customOrder.setPayerAddressLine2(StringUtils.isNull(""));
+                    customOrder.setPayerAddressLine3(StringUtils.isNull(""));
+                    customOrder.setPayerAdminArea1(StringUtils.isNull(""));
+                    customOrder.setPayerAdminArea2(StringUtils.isNull(""));
+                    customOrder.setPayerAdminArea3(StringUtils.isNull(""));
+                    customOrder.setPayerAdminArea4(StringUtils.isNull(""));
+                } else {
+                    customOrder.setPayerCountryCode(StringUtils.isNull(addressPortable.countryCode()));
+                    customOrder.setPayerPostalCode(StringUtils.isNull(addressPortable.postalCode()));
+                    customOrder.setPayerAddressLine1(StringUtils.isNull(addressPortable.addressLine1()));
+                    customOrder.setPayerAddressLine2(StringUtils.isNull(addressPortable.addressLine2()));
+                    customOrder.setPayerAddressLine3(StringUtils.isNull(addressPortable.addressLine3()));
+                    customOrder.setPayerAdminArea1(StringUtils.isNull(addressPortable.adminArea1()));
+                    customOrder.setPayerAdminArea2(StringUtils.isNull(addressPortable.adminArea2()));
+                    customOrder.setPayerAdminArea3(StringUtils.isNull(addressPortable.adminArea3()));
+                    customOrder.setPayerAdminArea4(StringUtils.isNull(addressPortable.adminArea4()));
+                }
             }
-            final PhoneWithType phoneWithType = payer.phoneWithType();
-            if (phoneWithType == null) {
-                customOrder.setPayerPhoneType(StringUtils.isNull(""));
-                customOrder.setPayerPhoneNumber(StringUtils.isNull(""));
-            } else {
-                customOrder.setPayerPhoneType(StringUtils.isNull(phoneWithType.phoneType()));
-                final Phone phone1 = phoneWithType.phoneNumber();
-                String tmp = "" + phone1.countryCallingCode() + " " + phone1.nationalNumber() + " " + phone1.extensionNumber();
-                customOrder.setPayerPhoneNumber(StringUtils.isNull(tmp));
-            }
-            customOrder.setPayerEmail(StringUtils.isNull(payer.email()));
-            final AddressPortable addressPortable = payer.addressPortable();
-            if (addressPortable == null) {
-                customOrder.setPayerCountryCode(StringUtils.isNull(""));
-                customOrder.setPayerPostalCode(StringUtils.isNull(""));
-                customOrder.setPayerAddressLine1(StringUtils.isNull(""));
-                customOrder.setPayerAddressLine2(StringUtils.isNull(""));
-                customOrder.setPayerAddressLine3(StringUtils.isNull(""));
-                customOrder.setPayerAdminArea1(StringUtils.isNull(""));
-                customOrder.setPayerAdminArea2(StringUtils.isNull(""));
-                customOrder.setPayerAdminArea3(StringUtils.isNull(""));
-                customOrder.setPayerAdminArea4(StringUtils.isNull(""));
-            } else {
-                customOrder.setPayerCountryCode(StringUtils.isNull(addressPortable.countryCode()));
-                customOrder.setPayerPostalCode(StringUtils.isNull(addressPortable.postalCode()));
-                customOrder.setPayerAddressLine1(StringUtils.isNull(addressPortable.addressLine1()));
-                customOrder.setPayerAddressLine2(StringUtils.isNull(addressPortable.addressLine2()));
-                customOrder.setPayerAddressLine3(StringUtils.isNull(addressPortable.addressLine3()));
-                customOrder.setPayerAdminArea1(StringUtils.isNull(addressPortable.adminArea1()));
-                customOrder.setPayerAdminArea2(StringUtils.isNull(addressPortable.adminArea2()));
-                customOrder.setPayerAdminArea3(StringUtils.isNull(addressPortable.adminArea3()));
-                customOrder.setPayerAdminArea4(StringUtils.isNull(addressPortable.adminArea4()));
-            }
-        }
 //        order.setOrderID(StringUtils.isNull(req.getParameter("id")));
 //        order.setIntent(StringUtils.isNull(req.getParameter("intent")));
 //        order.setStatus(StringUtils.isNull(req.getParameter("status")));
@@ -367,30 +415,46 @@ public class Router {
 //        order.setPayerGivenName(StringUtils.isNull(req.getParameter("payerGivenName")));
 //        order.setPayerSurname(StringUtils.isNull(req.getParameter("payerSurname")));
 //        order.setPayerEmail(StringUtils.isNull(req.getParameter("payerEmail")));
-        orderService.save(customOrder);
-
-        List<Ticket> tickets = (List<Ticket>) req.getSession().getAttribute("tickets");
-        if (tickets == null) {
-            tickets = new ArrayList<Ticket>();
-            req.getSession().setAttribute("tickets", tickets);
+            orderService.save(customOrder);
+            if ("lottery".equals(orderType)) {
+                List<Ticket> tickets = (List<Ticket>) req.getSession().getAttribute("tickets");
+                if (tickets == null) {
+                    tickets = new ArrayList<Ticket>();
+                    req.getSession().setAttribute("tickets", tickets);
+                }
+                while (quantity-- > 0) {
+                    Ticket ticket = new Ticket();
+                    ticket.setOwner(StringUtils.isNull(email));
+                    ticket.setOrderID(StringUtils.isNull(customOrder.getOrderID()));
+                    Random random = new Random();
+                    String number = Integer.toString(random.nextInt(1000000) + 1000000);
+                    number = number.substring(1);
+                    ticket.setNumber(StringUtils.isNull(number));
+                    Timestamp createDateTime = new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime().getTime());
+                    ticket.setCreateDateTime(createDateTime);
+                    ticket.setShow(false);
+                    ticketService.save(ticket);
+                    tickets.add(ticket);
+                }
+                mailQueueService.addMail(StringUtils.isNull(email), null, null, "Ticket Receipt", "sendVoteMail", tickets, null);
+            } else if ("fundraising".equals(orderType)) {
+                message.setSubject("Fundraising");
+                message.setMessage(description);
+                messageService.save(message);
+            }
+            if (!"".equals(error)) {
+                message.setSubject("The order contains wrong information");
+                message.setMessage(error);
+                messageService.save(message);
+                return error;
+            }
+        } catch (Exception e) {
+            message.setSubject("Capture Order Error !");
+            message.setMessage("unknown Error: " + e);
+            messageService.save(message);
+            e.printStackTrace();
         }
-        while (quantity-- > 0) {
-            Ticket ticket = new Ticket();
-            ticket.setOwner(StringUtils.isNull(email));
-            ticket.setOrderID(StringUtils.isNull(customOrder.getOrderID()));
-            Random random = new Random();
-            String number = Integer.toString(random.nextInt(1000000) + 1000000);
-            number = number.substring(1);
-            ticket.setNumber(StringUtils.isNull(number));
-            Timestamp createDateTime = new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime().getTime());
-            ticket.setCreateDateTime(createDateTime);
-            ticket.setShow(false);
-            ticketService.save(ticket);
-            tickets.add(ticket);
-        }
-        mailQueueService.addMail(StringUtils.isNull(email), null, null, "Ticket Receipt", "sendVoteMail", tickets,
-                null);
-        return "Success";
+        return "Thank You !";
     }
 
     @GetMapping("/orderCancel")
@@ -398,7 +462,7 @@ public class Router {
         Message message = new Message();
         message.setCreateDateTime(new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime().getTime()));
         message.setSubject("Canceled Order !");
-        message.setMessage(StringUtils.isNull(req.getParameter("message")));
+        message.setMessage("[" + StringUtils.isNull(req.getParameter("orderType")) + "]" + StringUtils.isNull(req.getParameter("message")));
         messageService.save(message);
         mailQueueService.addMail("henryyi2005@gmail.com", null, null, "已取消的订单", "sendWarnMail", null, message);
         try {
@@ -413,7 +477,7 @@ public class Router {
         Message message = new Message();
         message.setCreateDateTime(new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime().getTime()));
         message.setSubject("Wrong Order !");
-        message.setMessage(StringUtils.isNull(req.getParameter("message")));
+        message.setMessage("[" + StringUtils.isNull(req.getParameter("orderType")) + "]" + StringUtils.isNull(req.getParameter("message")));
         messageService.save(message);
         mailQueueService.addMail("henryyi2005@gmail.com", null, null, "错误订单", "sendWarnMail", null, message);
         try {

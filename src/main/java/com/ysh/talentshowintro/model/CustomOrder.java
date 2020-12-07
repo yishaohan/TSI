@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 public class CustomOrder {
     private int id;
     private String orderID;
+    private String orderType;
     private String intent;
     /**
      * CREATED. The order was created with the specified context.
@@ -20,6 +21,7 @@ public class CustomOrder {
     private int quantity;
     private String amountValue;
     private String amountCurrencyCode;
+    private String description;
     private String payerID;
     private String payerFullName;
     private String payerGivenName;
@@ -49,6 +51,14 @@ public class CustomOrder {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
     public String getOrderID() {
@@ -105,6 +115,14 @@ public class CustomOrder {
 
     public void setAmountCurrencyCode(String amountCurrencyCode) {
         this.amountCurrencyCode = amountCurrencyCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPayerID() {
@@ -288,12 +306,14 @@ public class CustomOrder {
         return "CustomOrder{" +
                 "id=" + id +
                 ", orderID='" + orderID + '\'' +
+                ", orderType='" + orderType + '\'' +
                 ", intent='" + intent + '\'' +
                 ", orderStatus='" + orderStatus + '\'' +
                 ", updateDateTime=" + updateDateTime +
                 ", quantity=" + quantity +
                 ", amountValue='" + amountValue + '\'' +
                 ", amountCurrencyCode='" + amountCurrencyCode + '\'' +
+                ", description='" + description + '\'' +
                 ", payerID='" + payerID + '\'' +
                 ", payerFullName='" + payerFullName + '\'' +
                 ", payerGivenName='" + payerGivenName + '\'' +

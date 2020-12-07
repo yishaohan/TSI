@@ -216,15 +216,12 @@
                     card's content.</p>
             </div>
             <div class="form-group">
-                <input type="email" required class="form-control form-control-sm" name="email" id="email2" placeholder="Please enter your email">
+                <small class="alert alert-danger form-text text-center" id="email2Error" style="visibility: hidden;">Please enter a description</small>
+                <input type="email" class="form-control form-control-sm" name="email" id="email2" placeholder="Please enter your email">
                 <small class="form-text text-muted">We'll never share your email with anyone.</small>
             </div>
-            <div th:remove="${session.tickets !=null } ? none : all">
-                <p>
-                    <button class="btn btn-warning rounded-pill m-auto w-100" type="button" data-toggle="collapse" data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">
-                        show ticket number
-                    </button>
-                </p>
+            <div class="mb-3" th:remove="${session.tickets !=null } ? none : all">
+                <button class="btn btn-success btn-sm rounded-pill w-100" data-toggle="collapse" data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">show ticket number</button>
                 <div class="collapse mb-3" id="tickets">
                     <div class="d-block card card-body text-center mb-3 border-warning px-0" th:each="ticket : ${session.tickets}" style="background-image: url('/image/lotteryBackground.png');background-repeat: no-repeat;background-size: auto 100%;border-width: medium;">
                                 <span class="" th:each="i:${#numbers.sequence(0,5)}">
@@ -278,6 +275,24 @@
                 <h5 class="card-title">Donate</h5>
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
                     card's content.</p>
+            </div>
+            <div class="" id="smart-button-container2">
+                <div class="form-group mb-0">
+                    <small class="alert alert-danger form-text mt-0 mb-1 py-0 text-center" id="descriptionError" style="visibility: hidden;">Please enter a description</small>
+                    <input class="form-control form-control-sm" type="text" name="descriptionInput" id="description" maxlength="127" value="" placeholder="Please write something ......">
+                </div>
+                <div class="form-group">
+                    <small class="alert alert-danger form-text mt-1 mb-1 py-0 text-center" id="priceLabelError" style="visibility: hidden;">Please enter a price</small>
+                    <div class="input-group input-group-sm" style="text-align: center">
+                        <input class="form-control" name="amountInput" type="number" id="amount" placeholder="Fundraising amount" value="">
+                        <div class="input-group-append">
+                            <span class="input-group-text">CAD</span>
+                        </div>
+                    </div>
+                </div>
+                <!--                <div id="invoiceidDiv" style="text-align: center; display: none;"><label for="invoiceid"> </label><input name="invoiceid" maxlength="127" type="text" id="invoiceid" value=""></div>-->
+                <!--                <p id="invoiceidError" style="visibility: hidden; color:red; text-align: center;">Please enter an Invoice ID</p>-->
+                <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container2"></div>
             </div>
         </div>
     </div>
@@ -371,32 +386,23 @@
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (details) {
                     var id = details.id;
-                    // var intent = details.intent;
-                    // var status = details.status;
-                    // // var links = details.links[0].rel;
-                    // var createTime = details.create_time;
-                    // var updateTime = details.update_time;
-                    // var payerID = details.payer.payer_id;
-                    // var payerGivenName = details.payer.name.given_name;
-                    // var payerSurname = details.payer.name.surname;
-                    // var payerEmail = details.payer.email_address;
-                    // var quantity = details.purchase_units[0].items[0].quantity;
-                    // console.log(quantity);
-                    // fetch(`/captureOrder?id=${id}&intent=${intent}&status=${status}&createTime=${createTime}&updateTime=${updateTime}&payerID=${payerID}&payerGivenName=${payerGivenName}&payerSurname=${payerSurname}&payerEmail=${payerEmail}&quantity=${quantity}`), {}
+                    var orderType = "lottery";
                     var email = document.getElementById("email2").value;
-                    fetch(`/captureOrder?id=${id}&email=${email}`, {}).then(function () {
+                    fetch(`/captureOrder?id=${id}&orderType=${orderType}&email=${email}`, {}).then(function () {
                         // alert("You have made the transaction. Thank you for your support !");
                         window.location.reload();
                     });
                 });
             },
             onCancel: function (data) {
-                fetch(`/orderCancel?message=Order is ${data.orderID} cancelled !`, {}).then(function () {
+                var orderType = "lottery";
+                fetch(`/orderCancel?orderType=${orderType}&message=Order is ${data.orderID} cancelled !`, {}).then(function () {
                     alert("You canceled the payment order !");
                 });
             },
             onError: function (err) {
-                fetch(`/orderError?message=${err.message}`, {}).then(function () {
+                var orderType = "lottery";
+                fetch(`/orderError?orderType=${orderType}$message=${err.message}`, {}).then(function () {
                     alert("There was an error in payment, please try again !");
                 });
             }
@@ -406,28 +412,145 @@
     initPayPalButton();
 </script>
 
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
+<script>
+    function initPayPalButton2() {
+        var description = document.querySelector('#smart-button-container2 #description');
+        var amount = document.querySelector('#smart-button-container2 #amount');
+        var descriptionError = document.querySelector('#smart-button-container2 #descriptionError');
+        var priceError = document.querySelector('#smart-button-container2 #priceLabelError');
+        // var invoiceid = document.querySelector('#smart-button-container2 #invoiceid');
+        // var invoiceidError = document.querySelector('#smart-button-container2 #invoiceidError');
+        // var invoiceidDiv = document.querySelector('#smart-button-container2 #invoiceidDiv');
+
+        var elArr = [description, amount];
+
+        // if (invoiceidDiv.firstChild.innerHTML.length > 1) {
+        //     invoiceidDiv.style.display = "block";
+        // }
+
+        var purchase_units = [];
+        purchase_units[0] = {};
+        purchase_units[0].amount = {};
+
+        function validate(event) {
+            return event.value.length > 0;
+        }
+
+        paypal.Buttons({
+            style: {
+                color: 'gold',
+                shape: 'pill',
+                label: 'paypal',
+                layout: 'vertical',
+
+            },
+
+            onInit: function (data, actions) {
+                actions.disable();
+
+                // if (invoiceidDiv.style.display === "block") {
+                //     elArr.push(invoiceid);
+                // }
+
+                elArr.forEach(function (item) {
+                    item.addEventListener('keyup', function (event) {
+                        var result = elArr.every(validate);
+                        if (result) {
+                            actions.enable();
+                        } else {
+                            actions.disable();
+                        }
+                    });
+                });
+            },
+
+            onClick: function () {
+                if (description.value.length < 1) {
+                    descriptionError.style.visibility = "visible";
+                } else {
+                    descriptionError.style.visibility = "hidden";
+                }
+
+                if (amount.value.length < 1) {
+                    priceError.style.visibility = "visible";
+                } else {
+                    priceError.style.visibility = "hidden";
+                }
+
+                // if (invoiceid.value.length < 1 && invoiceidDiv.style.display === "block") {
+                //     invoiceidError.style.visibility = "visible";
+                // } else {
+                //     invoiceidError.style.visibility = "hidden";
+                // }
+
+                purchase_units[0].description = description.value;
+                purchase_units[0].amount.value = amount.value;
+
+                // if (invoiceid.value !== '') {
+                //     purchase_units[0].invoice_id = invoiceid.value;
+                // }
+            },
+
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: purchase_units,
+                });
+            },
+
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    var id = details.id;
+                    var orderType = "fundraising";
+                    var desc = description.value;
+                    fetch(`/captureOrder?id=${id}&orderType=${orderType}&description=${desc}`, {}).then(function () {
+                        // alert("You have made the transaction. Thank you for your support !");
+                        window.location.reload();
+                    });
+                });
+            },
+
+            onCancel: function (data) {
+                var orderType = "fundraising";
+                fetch(`/orderCancel?orderType=${orderType}&message=Order is ${data.orderID} cancelled !`, {}).then(function () {
+                    alert("You canceled the payment order !");
+                });
+            },
+
+            onError: function (err) {
+                var orderType = "fundraising";
+                fetch(`/orderError?orderType=${orderType}$message=${err.message}`, {}).then(function () {
+                    alert("There was an error in payment, please try again !");
+                });
+            }
+        }).render('#paypal-button-container2');
+    }
+
+    initPayPalButton2();
+</script>
 
 <!--
   Create a Twitch.Embed object that will render
   within the "twitch-embed" root element.
 -->
-<script type="text/javascript">
-    var embed = new Twitch.Embed("twitch-embed", {
-        width: "100%",
-        height: 480,
-        channel: "monstercat",
-        layout: "video-with-chat",
-        autoplay: true,
-        // only needed if your site is also embedded on embed.example.com and othersite.example.com
-        parent: ["xclass.highspeed.vip"]
-    });
 
-    embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
-        var player = embed.getPlayer();
-        player.play();
-    });
-</script>
+<!--<script src="https://embed.twitch.tv/embed/v1.js"></script>-->
+
+<!--<script type="text/javascript">-->
+<!--    var embed = new Twitch.Embed("twitch-embed", {-->
+<!--        width: "100%",-->
+<!--        height: 480,-->
+<!--        channel: "monstercat",-->
+<!--        layout: "video-with-chat",-->
+<!--        autoplay: true,-->
+<!--        // only needed if your site is also embedded on embed.example.com and othersite.example.com-->
+<!--        parent: ["xclass.highspeed.vip"]-->
+<!--    });-->
+
+<!--    embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {-->
+<!--        var player = embed.getPlayer();-->
+<!--        player.play();-->
+<!--    });-->
+<!--</script>-->
 
 <script>
     function countDown(times) {
