@@ -29,10 +29,6 @@ class TalentshowintroTests {
     void contextLoads() {
     }
 
-    //    @Test
-    void mailSend() {
-//        sendMailTask.sendMail();
-    }
 
     //    @Test
     void paypal() throws Exception {
@@ -40,10 +36,5 @@ class TalentshowintroTests {
 //        HttpResponse<Order> response = Credentials.paypalClient.execute(request);
 //        Order order = ((Order) response.result());
 //        System.out.println(new JSONObject(new Json().serialize(response.result())).toString(4));
-    }
-
-    //    @Test
-    public void test() {
-//        System.out.println(ticketService.getTicketByID(70));
     }
 }
