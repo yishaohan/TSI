@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-STPRYEJ2MV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-STPRYEJ2MV');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Talent Show 2020</title>
+    <link rel="icon" href="../favicon.ico" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{/bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" href="../static/bootstrap/css/style.css" th:href="@{/bootstrap/css/style.css}">
+    <link rel="stylesheet" href="../static/bootstrap/iconfont/iconfont.css" th:href="@{/bootstrap/iconfont/iconfont.css}">
+    <script src="../static/bootstrap/js/jquery-3.5.1.slim.min.js" th:src="@{/bootstrap/js/jquery-3.5.1.slim.min.js}"></script>
+    <script src="../static/bootstrap/js/popper.min.js" th:src="@{/bootstrap/js/popper.min.js}"></script>
+    <script src="../static/bootstrap/js/bootstrap.js" th:src="@{/bootstrap/js/bootstrap.js}"></script>
+
+    <script>
+        function toast() {
+            $("#myToast").toast('hide');
+        }
+
+        $(document).ready(function () {
+            $(".show-toast").click(function () {
+                $("#myToast").toast('show');
+            });
+        });
+
+        function voted1() {
+            var email = document.getElementById("email1");
+            var votes = document.getElementsByClassName("form-check-input");
+            var cnt = 0;
+            for (var i = 0; i < votes.length; i++) {
+                if (votes[i] && votes[i].checked) cnt++;
+            }
+            if (email.value == "") {
+                alert("you haven't enter your email!");
+            } else if (email.value.indexOf("@") == -1 || email.value.indexOf(".") == -1) {
+                alert("Email format is incorrect!");
+            } else if (cnt <= 0) {
+                alert("Please choose a candidate!");
+            } else {
+                document.forms[0].submit();
+            }
+        }
+
+    </script>
+    <style>
+        img {
+            height: 250px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body th:onload="${second > 0 } ? 'javascript:countDown('+${second}+');': ''">
+
+<div class="container" style="position: relative">
+    <!--    <div aria-live="polite" aria-atomic="true" style="z-index: auto; position: absolute; top: 0; right: -50px;-->
+    <!--    min-height: 200px;">-->
+    <!--        <div th:class="${session.ticket != null}?'toast show':'toast hide'" class="" id="myToast"-->
+    <!--             data-autohide="false">-->
+    <!--            <div class="toast-header">-->
+    <!--                <strong class="mr-auto">Bootstrap</strong>-->
+    <!--                <small>11 mins ago</small>-->
+    <!--                <button th:onclick="'javascript:toast();'" type="button" class="ml-2 mb-1 close" data-dismiss="toast"-->
+    <!--                        aria-label="Close">-->
+    <!--                    <span aria-hidden="true">&times;</span>-->
+    <!--                </button>-->
+    <!--            </div>-->
+    <!--            <div class="toast-body"-->
+    <!--                 th:text="${'You ticket numbers are ' + session.ticket}">-->
+    <!--                Hello, world! This is a toast message.-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <div class="row" style="height: 200px;">
+        <h1 class="col text-center center" style="line-height: 200px">Talent Show</h1>
+    </div>
+    <!--    **************************************************************************-->
+    <div class="row mb-4" id="twitch-embed"></div>
+
+    <div class="row">
+        <div class="col-md mr-sm-4 p-4 card">
+            <img src="../static/image/vote.jpeg" th:src="@{/image/vote.jpeg}" class="card-img-top" alt="...">
+            <div class="card-body p-0 mb-5" style="flex: none">
+                <h5 class="card-title">Vote</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+            <div class="accordion" id="accordionExample">
+                <div th:if="${param.error!=null}" th:text="${param.error}" class="alert alert-danger rounded-pill" role="alert">
+                    A simple danger alert—check it out!
+                </div>
+                <div class="alert-success rounded-pill text-center mb-3" th:text="${param.message} ? ${param.message} : ''">Thank you !</div>
+                <form action="/vote" method="post">
+                    <div class="form-group">
+                        <!--                        <label for="exampleInputEmail1">Email address</label>-->
+                        <input type="email" required class="form-control form-control-sm" name="email1" id="email1" placeholder="Please enter your email">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                        data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="vote1" value="Jason"
+                                               id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1">
+                                            Jason
+                                        </label>
+                                    </div>
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body px-0">
+                                <div>
+                                    <iframe class="w-100" src="https://www.youtube.com/embed/MPbUaIZAaeA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                                    </iframe>
+                                </div>
+                                <p>Anim pariatur cliche reprehenderit , enim eiusmod high life accusamus terry
+                                    richardson
+                                    adsquid.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                        data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="vote2" value="Alina"
+                                               id="defaultCheck2">
+                                        <label class="form-check-label" for="defaultCheck2">
+                                            Alina
+                                        </label>
+                                    </div>
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                             data-parent="#accordionExample">
+                            <div class="card-body">
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
+                                quinoa
+                                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
+                                single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                                beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice
+                                lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
+                                probably haven't heard of them accusamus labore sustainable VHS.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                        data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="vote3" value="Anna"
+                                               id="defaultCheck3">
+                                        <label class="form-check-label" for="defaultCheck3">
+                                            Anna
+                                        </label>
+                                    </div>
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                             data-parent="#accordionExample">
+                            <div class="card-body">
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
+                                quinoa
+                                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
+                                single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                                beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice
+                                lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
+                                probably haven't heard of them accusamus labore sustainable VHS.
+                            </div>
+                        </div>
+                    </div>
+                    <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md mr-sm-4 p-4 card">
+            <img src="../static/image/ticket.jpeg" th:src="@{/image/ticket.jpeg}" class="card-img-top" alt="...">
+            <div class="card-body mb-5 p-0" style="flex: none">
+                <h5 class="card-title">50/50 tickets</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+            <div class="form-group">
+                <small class="alert alert-danger form-text text-center" id="email2Error" style="visibility: hidden;">Please enter a description</small>
+                <input type="email" class="form-control form-control-sm" name="email" id="email2" placeholder="Please enter your email">
+                <small class="form-text text-muted">We'll never share your email with anyone.</small>
+            </div>
+            <div class="mb-3" th:remove="${session.tickets !=null } ? none : all">
+                <button class="btn btn-success btn-sm rounded-pill w-100" data-toggle="collapse" data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">show ticket number</button>
+                <div class="collapse mb-3" id="tickets">
+                    <div class="d-block card card-body text-center mb-3 border-warning px-0" th:each="ticket : ${session.tickets}" style="background-image: url('/image/lotteryBackground.png');background-repeat: no-repeat;background-size: auto 100%;border-width: medium;">
+                                <span class="" th:each="i:${#numbers.sequence(0,5)}">
+                                    <span th:class="|text-danger iconfont icon-shuzi${#strings.substring(ticket.getNumber(), i, i+1 )}|" style="font-size: x-large;"></span>
+                                </span>
+                    </div>
+                </div>
+            </div>
+            <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+            <div id="smart-button-container">
+                <div style="text-align: center;">
+                    <div style="margin-bottom: 1.25rem;">
+                        <select id="item-options">
+                            <option value="50/50 ticket" price="5.00">50/50 ticket - 5.00 CAD</option>
+                        </select>
+                        <select style="visibility: hidden" id="quantitySelect">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                        </select>
+                    </div>
+                    <div id="paypal-button-container"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md p-4 card">
+            <img src="../static/image/donate.jpeg" th:src="@{/image/donate.jpeg}" class="card-img-top" alt="...">
+            <div class="card-body mb-5 p-0" style="flex: none">
+                <h5 class="card-title">Donate</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+            <div class="" id="smart-button-container2">
+                <div class="form-group mb-0">
+                    <small class="alert alert-danger form-text mt-0 mb-1 py-0 text-center" id="descriptionError" style="visibility: hidden;">Please enter a description</small>
+                    <input class="form-control form-control-sm" type="text" name="descriptionInput" id="description"
+                           maxlength="127" value="" placeholder="Please enter a description">
+                </div>
+                <div class="form-group">
+                    <small class="alert alert-danger form-text mt-1 mb-1 py-0 text-center" id="priceLabelError" style="visibility: hidden;">Please enter a price</small>
+                    <div class="input-group input-group-sm" style="text-align: center">
+                        <input class="form-control" name="amountInput" type="number" id="amount" placeholder="Fundraising amount" value="">
+                        <div class="input-group-append">
+                            <span class="input-group-text">CAD</span>
+                        </div>
+                    </div>
+                </div>
+                <!--                <div id="invoiceidDiv" style="text-align: center; display: none;"><label for="invoiceid"> </label><input name="invoiceid" maxlength="127" type="text" id="invoiceid" value=""></div>-->
+                <!--                <p id="invoiceidError" style="visibility: hidden; color:red; text-align: center;">Please enter an Invoice ID</p>-->
+                <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script
+        src="https://www.paypal.com/sdk/js?client-id=AYsnjLgEmwy2RIhy0QdO335NCySWCFKnxecxVmVhTVUxLE8hdw_ZNs1LvGD5sH61BErt2JxRuTc7I9Pn&currency=CAD" data-sdk-integration-source="button-factory">
+</script>
+
+<script>
+    function initPayPalButton() {
+        var shipping = 0;
+        var itemOptions = document.querySelector("#smart-button-container #item-options");
+        var quantity = parseInt(20);
+        var quantitySelect = document.querySelector("#smart-button-container #quantitySelect");
+        if (!isNaN(quantity)) {
+            quantitySelect.style.visibility = "visible";
+        }
+        var orderDescription = '';
+        if (orderDescription === '') {
+            orderDescription = 'Item';
+        }
+        paypal.Buttons({
+            style: {
+                shape: 'pill',
+                color: 'gold',
+                layout: 'vertical',
+                label: 'paypal'
+            },
+            onInit: function (data, actions) {
+                actions.disable();
+                document.getElementById("email2").addEventListener("focusout", function (event) {
+                    if (document.getElementById('email2').value == "") {
+                        actions.disable();
+                    } else {
+                        actions.enable();
+                    }
+                })
+            },
+            onClick: function (data, actions) {
+                if (document.getElementById('email2').value == "") {
+                    alert("Please fill in the email address");
+                }
+            },
+            createOrder: function (data, actions) {
+                var selectedItemDescription = itemOptions.options[itemOptions.selectedIndex].value;
+                var selectedItemPrice = parseFloat(itemOptions.options[itemOptions.selectedIndex].getAttribute("price"));
+                var tax = (0 === 0) ? 0 : (selectedItemPrice * (parseFloat(0) / 100));
+                if (quantitySelect.options.length > 0) {
+                    quantity = parseInt(quantitySelect.options[quantitySelect.selectedIndex].value);
+                } else {
+                    quantity = 1;
+                }
+                tax *= quantity;
+                tax = Math.round(tax * 100) / 100;
+                var priceTotal = quantity * selectedItemPrice + parseFloat(shipping) + tax;
+                priceTotal = Math.round(priceTotal * 100) / 100;
+                var itemTotalValue = Math.round((selectedItemPrice * quantity) * 100) / 100;
+                return actions.order.create({
+                    purchase_units: [{
+                        description: orderDescription,
+                        amount: {
+                            currency_code: 'CAD',
+                            value: priceTotal,
+                            breakdown: {
+                                item_total: {
+                                    currency_code: 'CAD',
+                                    value: itemTotalValue,
+                                },
+                                shipping: {
+                                    currency_code: 'CAD',
+                                    value: shipping,
+                                },
+                                tax_total: {
+                                    currency_code: 'CAD',
+                                    value: tax,
+                                }
+                            }
+                        },
+                        items: [{
+                            name: selectedItemDescription,
+                            unit_amount: {
+                                currency_code: 'CAD',
+                                value: selectedItemPrice,
+                            },
+                            quantity: quantity
+                        }]
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    var id = details.id;
+                    var orderType = "lottery";
+                    var email = document.getElementById("email2").value;
+                    fetch(`/captureOrder?id=${id}&orderType=${orderType}&email=${email}`, {}).then(function () {
+                        // alert("You have made the transaction. Thank you for your support !");
+                        window.location.reload();
+                    });
+                });
+            },
+            onCancel: function (data) {
+                var orderType = "lottery";
+                fetch(`/orderCancel?orderType=${orderType}&message=Order is ${data.orderID} cancelled !`, {}).then(function () {
+                    alert("You canceled the payment order !");
+                });
+            },
+            onError: function (err) {
+                var orderType = "lottery";
+                fetch(`/orderError?orderType=${orderType}$message=${err.message}`, {}).then(function () {
+                    alert("There was an error in payment, please try again !");
+                });
+            }
+        }).render('#paypal-button-container');
+    }
+
+    initPayPalButton();
+</script>
+
+<script>
+    function initPayPalButton2() {
+        var description = document.querySelector('#smart-button-container2 #description');
+        var amount = document.querySelector('#smart-button-container2 #amount');
+        var descriptionError = document.querySelector('#smart-button-container2 #descriptionError');
+        var priceError = document.querySelector('#smart-button-container2 #priceLabelError');
+        // var invoiceid = document.querySelector('#smart-button-container2 #invoiceid');
+        // var invoiceidError = document.querySelector('#smart-button-container2 #invoiceidError');
+        // var invoiceidDiv = document.querySelector('#smart-button-container2 #invoiceidDiv');
+
+        var elArr = [description, amount];
+
+        // if (invoiceidDiv.firstChild.innerHTML.length > 1) {
+        //     invoiceidDiv.style.display = "block";
+        // }
+
+        var purchase_units = [];
+        purchase_units[0] = {};
+        purchase_units[0].amount = {};
+
+        function validate(event) {
+            return event.value.length > 0;
+        }
+
+        paypal.Buttons({
+            style: {
+                color: 'gold',
+                shape: 'pill',
+                label: 'paypal',
+                layout: 'vertical',
+
+            },
+
+            onInit: function (data, actions) {
+                actions.disable();
+
+                // if (invoiceidDiv.style.display === "block") {
+                //     elArr.push(invoiceid);
+                // }
+
+                elArr.forEach(function (item) {
+                    item.addEventListener('keyup', function (event) {
+                        var result = elArr.every(validate);
+                        if (result) {
+                            actions.enable();
+                        } else {
+                            actions.disable();
+                        }
+                    });
+                });
+            },
+
+            onClick: function () {
+                if (description.value.length < 1) {
+                    descriptionError.style.visibility = "visible";
+                } else {
+                    descriptionError.style.visibility = "hidden";
+                }
+
+                if (amount.value.length < 1) {
+                    priceError.style.visibility = "visible";
+                } else {
+                    priceError.style.visibility = "hidden";
+                }
+
+                // if (invoiceid.value.length < 1 && invoiceidDiv.style.display === "block") {
+                //     invoiceidError.style.visibility = "visible";
+                // } else {
+                //     invoiceidError.style.visibility = "hidden";
+                // }
+
+                purchase_units[0].description = description.value;
+                purchase_units[0].amount.value = amount.value;
+
+                // if (invoiceid.value !== '') {
+                //     purchase_units[0].invoice_id = invoiceid.value;
+                // }
+            },
+
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: purchase_units,
+                });
+            },
+
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    var id = details.id;
+                    var orderType = "fundraising";
+                    var desc = description.value;
+                    fetch(`/captureOrder?id=${id}&orderType=${orderType}&description=${desc}`, {}).then(function () {
+                        // alert("You have made the transaction. Thank you for your support !");
+                        window.location.reload();
+                    });
+                });
+            },
+
+            onCancel: function (data) {
+                var orderType = "fundraising";
+                fetch(`/orderCancel?orderType=${orderType}&message=Order is ${data.orderID} cancelled !`, {}).then(function () {
+                    alert("You canceled the payment order !");
+                });
+            },
+
+            onError: function (err) {
+                var orderType = "fundraising";
+                fetch(`/orderError?orderType=${orderType}$message=${err.message}`, {}).then(function () {
+                    alert("There was an error in payment, please try again !");
+                });
+            }
+        }).render('#paypal-button-container2');
+    }
+
+    initPayPalButton2();
+</script>
+
+<!--
+  Create a Twitch.Embed object that will render
+  within the "twitch-embed" root element.
+-->
+
+<script src="https://embed.twitch.tv/embed/v1.js"></script>
+
+<script type="text/javascript">
+    var embed = new Twitch.Embed("twitch-embed", {
+        width: "100%",
+        height: 480,
+        channel: "monstercat",
+        layout: "video-with-chat",
+        autoplay: true,
+        // only needed if your site is also embedded on embed.example.com and othersite.example.com
+        parent: ["xclass.highspeed.vip"]
+    });
+
+    embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+        var player = embed.getPlayer();
+        player.play();
+    });
+</script>
+
+<script>
+    function countDown(times) {
+        var timer = setInterval(function () {
+            if (times <= 0) {
+                document.getElementById("vote").innerHTML = "Submit";
+                document.getElementById("vote").disabled = false;
+                clearInterval(timer);
+                return;
+            }
+            var h = parseInt(times / 60 / 60);
+            h = h < 10 ? '0' + h : h;
+            var m = parseInt(times / 60 % 60);
+            m = m < 10 ? '0' + m : m;
+            var s = parseInt(times % 60);
+            s = s < 10 ? '0' + s : s;
+            times = times - 1;
+            var temp = "" + h + " : " + m + " : " + s;
+            document.getElementById("vote").innerHTML = temp;
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>

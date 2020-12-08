@@ -16,295 +16,352 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Talent Show 2020</title>
+    <title>Talent Show 2020 | TEST</title>
     <link rel="icon" href="../favicon.ico" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{/bootstrap/css/bootstrap.css}">
-    <link rel="stylesheet" href="../static/bootstrap/css/style.css" th:href="@{/bootstrap/css/style.css}">
     <link rel="stylesheet" href="../static/bootstrap/iconfont/iconfont.css" th:href="@{/bootstrap/iconfont/iconfont.css}">
-    <script src="../static/bootstrap/js/jquery-3.5.1.slim.min.js"
-            th:src="@{/bootstrap/js/jquery-3.5.1.slim.min.js}"></script>
+    <script src="../static/bootstrap/js/jquery-3.5.1.slim.min.js" th:src="@{/bootstrap/js/jquery-3.5.1.slim.min.js}"></script>
     <script src="../static/bootstrap/js/popper.min.js" th:src="@{/bootstrap/js/popper.min.js}"></script>
     <script src="../static/bootstrap/js/bootstrap.js" th:src="@{/bootstrap/js/bootstrap.js}"></script>
-
     <script>
-        function toast() {
-            $("#myToast").toast('hide');
-        }
-
-        $(document).ready(function () {
-            $(".show-toast").click(function () {
-                $("#myToast").toast('show');
-            });
-        });
-
         function voted1() {
-            var email = document.getElementById("email1");
-            var votes = document.getElementsByClassName("form-check-input");
+            var email = document.getElementById("voteEmail");
+            var votes = document.getElementsByClassName("checkbox");
             var cnt = 0;
             for (var i = 0; i < votes.length; i++) {
                 if (votes[i] && votes[i].checked) cnt++;
             }
             if (email.value == "") {
-                alert("you haven't enter your email!");
-            } else if (email.value.indexOf("@") == -1 || email.value.indexOf(".") == -1) {
-                alert("Email format is incorrect!");
-            } else if (cnt <= 0) {
-                alert("Please choose a candidate!");
+                // alert("you haven't enter your email!");
+                document.getElementById('voteEmailError1').style.visibility = "visible";
+                return;
             } else {
+                document.getElementById('voteEmailError1').style.visibility = "hidden";
+            }
+            if (email.value.indexOf("@") == -1 || email.value.indexOf(".") == -1) {
+                // alert("Email format is incorrect!");
+                document.getElementById('voteEmailError2').style.visibility = "visible";
+                return;
+            } else {
+                document.getElementById('voteEmailError2').style.visibility = "hidden";
+            }
+            if (cnt <= 0) {
+                // alert("Please choose a candidate!");
+                document.getElementById('voteCheckError1').style.visibility = "visible";
+                return;
+            } else {
+                document.getElementById('voteCheckError1').style.visibility = "hidden";
                 document.forms[0].submit();
             }
         }
 
     </script>
-    <style>
-        img {
-            height: 250px;
-            margin-bottom: 20px;
-        }
-    </style>
 </head>
-<body th:onload="${second > 0 } ? 'javascript:countDown('+${second}+');': ''">
-
-<div class="container" style="position: relative">
-    <!--    <div aria-live="polite" aria-atomic="true" style="z-index: auto; position: absolute; top: 0; right: -50px;-->
-    <!--    min-height: 200px;">-->
-    <!--        <div th:class="${session.ticket != null}?'toast show':'toast hide'" class="" id="myToast"-->
-    <!--             data-autohide="false">-->
-    <!--            <div class="toast-header">-->
-    <!--                <strong class="mr-auto">Bootstrap</strong>-->
-    <!--                <small>11 mins ago</small>-->
-    <!--                <button th:onclick="'javascript:toast();'" type="button" class="ml-2 mb-1 close" data-dismiss="toast"-->
-    <!--                        aria-label="Close">-->
-    <!--                    <span aria-hidden="true">&times;</span>-->
-    <!--                </button>-->
-    <!--            </div>-->
-    <!--            <div class="toast-body"-->
-    <!--                 th:text="${'You ticket numbers are ' + session.ticket}">-->
-    <!--                Hello, world! This is a toast message.-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-    <div class="row" style="height: 200px;">
-        <h1 class="col text-center center" style="line-height: 200px">Talent Show</h1>
+<body class="">
+<div name="banner" class="container-fluid w-100 px-0" style="height: 200px;background-color: #F0F0F0;">
+    <div class="row mx-0 align-items-center justify-content-center h-100">
+        <img class="w-80" src="../static/image/TalentShow2020.png" th:src="@{/image/TalentShow2020.png}" style="max-width: 350px;">
     </div>
-    <!--    **************************************************************************-->
-    <div class="row mb-4" id="twitch-embed"></div>
-
-    <div class="row">
-        <div class="col-md mr-sm-4 p-4 card">
-            <img src="../static/image/vote.jpeg" th:src="@{/image/vote.jpeg}" class="card-img-top" alt="...">
-            <div class="card-body p-0 mb-5" style="flex: none">
-                <h5 class="card-title">Vote</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's content.</p>
-            </div>
-            <div class="accordion" id="accordionExample">
-                <div th:if="${param.error!=null}" th:text="${param.error}" class="alert alert-danger rounded-pill" role="alert">
-                    A simple danger alert—check it out!
-                </div>
-                <div class="alert-success rounded-pill text-center mb-3" th:text="${param.message} ? ${param.message} : ''">Thank you !</div>
-                <form action="/vote" method="post">
-                    <div class="form-group">
-                        <!--                        <label for="exampleInputEmail1">Email address</label>-->
-                        <input type="email" required class="form-control form-control-sm" name="email1" id="email1" placeholder="Please enter your email">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
-                    </div>
-                    <div class="card mt-2">
-                        <div class="card-header" id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                                        data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="vote1" value="Jason"
-                                               id="defaultCheck1">
-                                        <label class="form-check-label" for="defaultCheck1">
-                                            Jason
-                                        </label>
-                                    </div>
-                                </button>
-                            </h2>
-                        </div>
-
-                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
-                             data-parent="#accordionExample">
-                            <div class="card-body px-0">
-                                <div>
-                                    <iframe class="w-100" src="https://www.youtube.com/embed/MPbUaIZAaeA"
-                                            frameborder="0"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowfullscreen>
-                                    </iframe>
-                                </div>
-                                <p>Anim pariatur cliche reprehenderit , enim eiusmod high life accusamus terry
-                                    richardson
-                                    adsquid.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mt-2">
-                        <div class="card-header" id="headingTwo">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                                        data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="vote2" value="Alina"
-                                               id="defaultCheck2">
-                                        <label class="form-check-label" for="defaultCheck2">
-                                            Alina
-                                        </label>
-                                    </div>
-                                </button>
-                            </h2>
-                        </div>
-
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-                             data-parent="#accordionExample">
-                            <div class="card-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa
-                                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
-                                single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                                beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
-                                vice
-                                lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
-                                probably haven't heard of them accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mt-2">
-                        <div class="card-header" id="headingThree">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                                        data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="vote3" value="Anna"
-                                               id="defaultCheck3">
-                                        <label class="form-check-label" for="defaultCheck3">
-                                            Anna
-                                        </label>
-                                    </div>
-                                </button>
-                            </h2>
-                        </div>
-
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-                             data-parent="#accordionExample">
-                            <div class="card-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa
-                                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
-                                single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                                beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
-                                vice
-                                lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
-                                probably haven't heard of them accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
-                </form>
-            </div>
+</div>
+<div name="context" class="container">
+    <div name="twitch" class="row mx-0 mt-3">
+        <div class="w-100" id="twitch-embed"></div>
+    </div>
+    <div name="paypal" class="row w-100 mt-3 mx-0">
+        <div class="row w-100">
+            <ul class="nav nav-tabs nav-fill w-100" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" style="font-size: x-large">彩票</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" style="font-size: x-large">募捐</a>
+                </li>
+            </ul>
         </div>
-        <div class="col-md mr-sm-4 p-4 card">
-            <img src="../static/image/ticket.jpeg" th:src="@{/image/ticket.jpeg}" class="card-img-top" alt="...">
-            <div class="card-body mb-5 p-0" style="flex: none">
-                <h5 class="card-title">50/50 tickets</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's content.</p>
-            </div>
-            <div class="form-group">
-                <small class="alert alert-danger form-text text-center" id="email2Error" style="visibility: hidden;">Please enter a description</small>
-                <input type="email" class="form-control form-control-sm" name="email" id="email2" placeholder="Please enter your email">
-                <small class="form-text text-muted">We'll never share your email with anyone.</small>
-            </div>
-            <div class="mb-3" th:remove="${session.tickets !=null } ? none : all">
-                <button class="btn btn-success btn-sm rounded-pill w-100" data-toggle="collapse" data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">show ticket number</button>
-                <div class="collapse mb-3" id="tickets">
-                    <div class="d-block card card-body text-center mb-3 border-warning px-0" th:each="ticket : ${session.tickets}" style="background-image: url('/image/lotteryBackground.png');background-repeat: no-repeat;background-size: auto 100%;border-width: medium;">
+        <div class="tab-content w-100" id="myTabContent">
+            <div class="tab-pane fade show active w-100" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div name="lottery" class="row w-100 m-auto justify-content-center">
+                    <div class="col-md-6">
+                        <div name="lotteryImage" class="row justify-content-center mt-1">
+                            <img class="w-50" src="../static/image/ticket.jpeg" th:src="@{/image/ticket.jpeg}" alt="...">
+                        </div>
+                        <div name="lotteryDescription" class="mt-3">
+                            <h5 class="">50/50 tickets</h5>
+                            <p class="">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div name="lotteryEmailParent" class="form-group">
+                            <small name="lotteryEmailError" id="lotteryEmailError" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please enter your email</small>
+                            <input name="lotteryEmail" id="lotteryEmail" type="email" class="form-control form-control-sm" placeholder="Please enter your email">
+                            <small class="form-text text-muted">We'll never share your email with anyone.</small>
+                        </div>
+                        <div name="lotteryTickets" class="my-3" th:remove="${session.tickets !=null } ? none : all">
+                            <button class="btn btn-success btn-sm rounded-pill w-100" data-toggle="collapse" data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">show ticket number</button>
+                            <div class="collapse my-3" id="tickets">
+                                <div class="d-block card card-body text-center mb-3 border-warning px-0" th:each="ticket : ${session.tickets}" style="background-image: url('/image/lotteryBackground.png');background-repeat: no-repeat;background-size: auto 100%;border-width: medium;">
                                 <span class="" th:each="i:${#numbers.sequence(0,5)}">
                                     <span th:class="|text-danger iconfont icon-shuzi${#strings.substring(ticket.getNumber(), i, i+1 )}|" style="font-size: x-large;"></span>
                                 </span>
-                    </div>
-                </div>
-            </div>
-            <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////-->
-            <div id="smart-button-container">
-                <div style="text-align: center;">
-                    <div style="margin-bottom: 1.25rem;">
-                        <select id="item-options">
-                            <option value="50/50 ticket" price="5.00">50/50 ticket - 5.00 CAD</option>
-                        </select>
-                        <select style="visibility: hidden" id="quantitySelect">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                        </select>
-                    </div>
-                    <div id="paypal-button-container"></div>
-                </div>
-            </div>
-
-        </div>
-        <div class="col-md p-4 card">
-            <img src="../static/image/donate.jpeg" th:src="@{/image/donate.jpeg}" class="card-img-top" alt="...">
-            <div class="card-body mb-5 p-0" style="flex: none">
-                <h5 class="card-title">Donate</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's content.</p>
-            </div>
-            <div class="" id="smart-button-container2">
-                <div class="form-group mb-0">
-                    <small class="alert alert-danger form-text mt-0 mb-1 py-0 text-center" id="descriptionError" style="visibility: hidden;">Please enter a description</small>
-                    <input class="form-control form-control-sm" type="text" name="descriptionInput" id="description"
-                           maxlength="127" value="" placeholder="Please enter a description">
-                </div>
-                <div class="form-group">
-                    <small class="alert alert-danger form-text mt-1 mb-1 py-0 text-center" id="priceLabelError" style="visibility: hidden;">Please enter a price</small>
-                    <div class="input-group input-group-sm" style="text-align: center">
-                        <input class="form-control" name="amountInput" type="number" id="amount" placeholder="Fundraising amount" value="">
-                        <div class="input-group-append">
-                            <span class="input-group-text">CAD</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div name="smart-button-container1" id="smart-button-container1" class="" style="margin-top: 43px;">
+                            <div style="text-align: center;">
+                                <div style="margin-bottom: 1.25rem;">
+                                    <select id="item-options">
+                                        <option value="50/50 ticket" price="5.00">50/50 ticket - 5.00 CAD</option>
+                                    </select>
+                                    <select style="visibility: hidden" id="quantitySelect">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                </div>
+                                <div id="paypal-button-container1"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!--                <div id="invoiceidDiv" style="text-align: center; display: none;"><label for="invoiceid"> </label><input name="invoiceid" maxlength="127" type="text" id="invoiceid" value=""></div>-->
-                <!--                <p id="invoiceidError" style="visibility: hidden; color:red; text-align: center;">Please enter an Invoice ID</p>-->
-                <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container2"></div>
+            </div>
+            <div class="tab-pane fade w-100" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div name="fundraising" class="row m-auto w-100 justify-content-center">
+                    <div class="col-md-6">
+                        <div name="fundraisingImage" class="row justify-content-center mt-1">
+                            <img class="w-50" src="../static/image/donate.png" th:src="@{/image/donate.png}">
+                        </div>
+                        <div name="fundraisingDescription" class="mt-3">
+                            <h5 class="">Donate</h5>
+                            <p class="">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div name="fundraisingRemarksParent" class="form-group">
+                            <small name="fundraisingRemarksError" id="fundraisingRemarksError" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please enter a description</small>
+                            <input name="fundraisingRemarks" id="fundraisingRemarks" class="form-control form-control-sm" type="text" maxlength="127" value="" placeholder="">
+                            <small class="form-text text-muted">Please enter a description</small>
+                        </div>
+                        <div name="donations" class="my-3" th:remove="${session.donations !=null } ? none : all">
+                            <button class="btn btn-success btn-sm rounded-pill w-100" th:text="|Thank you for the ${session.donations.size()} donation|">Thank you for your donation</button>
+                        </div>
+                        <div name="smart-button-container2" id="smart-button-container2" class="">
+                            <div class="form-group mb-0">
+                            </div>
+                            <div class="form-group">
+                                <small class="alert alert-danger form-text mt-1 mb-1 py-0 text-center" id="priceLabelError" style="visibility: hidden;">Please enter a price</small>
+                                <div class="input-group input-group-sm" style="text-align: center">
+                                    <input class="form-control" name="amountInput" type="number" id="amount" placeholder="Fundraising amount" value="">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">CAD</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--                <div id="invoiceidDiv" style="text-align: center; display: none;"><label for="invoiceid"> </label><input name="invoiceid" maxlength="127" type="text" id="invoiceid" value=""></div>-->
+                            <!--                <p id="invoiceidError" style="visibility: hidden; color:red; text-align: center;">Please enter an Invoice ID</p>-->
+                            <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container2"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <div name="candidate" class="card-group">
+        <form action="/vote" method="post">
+            <div class="row w-100" style="height: 580px;">
+                <div class="col-md-4 mb-3">
+                    <div class="card border-success h-100">
+                        <div class="card-header" style="background-color: #F0F0F0">Alina</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-body">
+                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="input-group input-group-sm">
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Alina</label>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <input class="checkbox" type="checkbox" name="vote1" value="Alina">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-success h-100">
+                        <div class="card-header" style="background-color: #F0F0F0">Anna</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-body">
+                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="input-group input-group-sm">
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Anna</label>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <input class="checkbox" type="checkbox" name="vote2" value="Anna">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-success h-100">
+                        <div class="card-header" style="background-color: #F0F0F0">Jason</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-body">
+                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="input-group input-group-sm">
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Jason</label>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <input class="checkbox" type="checkbox" name="vote3" value="Jason">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-100" style="height: 580px;">
+                <div class="col-md-4 mb-3">
+                    <div class="card border-success h-100">
+                        <div class="card-header" style="background-color: #F0F0F0">Alina1</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-body">
+                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="input-group input-group-sm">
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Alina1</label>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <input class="checkbox" type="checkbox" name="vote4" value="Alina1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-success h-100">
+                        <div class="card-header" style="background-color: #F0F0F0">Anna1</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-body">
+                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="input-group input-group-sm">
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Anna1</label>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <input class="checkbox" type="checkbox" name="vote5" value="Anna1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card border-success h-100">
+                        <div class="card-header" style="background-color: #F0F0F0">Jason1</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-body">
+                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="input-group input-group-sm">
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Jason1</label>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <input class="checkbox" type="checkbox" name="vote6" value="Jason1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <small name="voteCheckError1" id="voteCheckError1" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please choose a candidate !</small>
+                <small name="voteEmailError1" id="voteEmailError1" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please enter your email</small>
+                <small name="voteEmailError2" id="voteEmailError2" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Email format is incorrect !</small>
+                <input type="email" required class="form-control form-control-sm" name="voteEmail" id="voteEmail" placeholder="Please enter your email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
+            </div>
+            <div class="row w-100">
+                <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<div name="footer" class="container-fluid mt-5" style="height: 50px;background-color: #F0F0F0;">
+    <div class="row mx-0 align-items-center justify-content-center h-100">
+        Copyright &copy;2020 All rights reserved to xClass.
+    </div>
+</div>
+<!--
+  Create a Twitch.Embed object that will render
+  within the "twitch-embed" root element.
+-->
+
+<script src="https://embed.twitch.tv/embed/v1.js"></script>
+
+<script type="text/javascript">
+    var embed = new Twitch.Embed("twitch-embed", {
+        width: "100%",
+        height: 480,
+        channel: "monstercat",
+        layout: "video-with-chat",
+        autoplay: true,
+        // only needed if your site is also embedded on embed.example.com and othersite.example.com
+        parent: ["xclass.highspeed.vip"]
+    });
+
+    embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
+        var player = embed.getPlayer();
+        player.play();
+    });
+</script>
 
 <script
         src="https://www.paypal.com/sdk/js?client-id=AYsnjLgEmwy2RIhy0QdO335NCySWCFKnxecxVmVhTVUxLE8hdw_ZNs1LvGD5sH61BErt2JxRuTc7I9Pn&currency=CAD" data-sdk-integration-source="button-factory">
 </script>
 
 <script>
-    function initPayPalButton() {
+    function initPayPalButton1() {
         var shipping = 0;
-        var itemOptions = document.querySelector("#smart-button-container #item-options");
+        var itemOptions = document.querySelector("#smart-button-container1 #item-options");
         var quantity = parseInt(20);
-        var quantitySelect = document.querySelector("#smart-button-container #quantitySelect");
+        var quantitySelect = document.querySelector("#smart-button-container1 #quantitySelect");
         if (!isNaN(quantity)) {
             quantitySelect.style.visibility = "visible";
         }
@@ -321,8 +378,8 @@
             },
             onInit: function (data, actions) {
                 actions.disable();
-                document.getElementById("email2").addEventListener("focusout", function (event) {
-                    if (document.getElementById('email2').value == "") {
+                document.getElementById("lotteryEmail").addEventListener("focusout", function (event) {
+                    if (document.getElementById('lotteryEmail').value == "") {
                         actions.disable();
                     } else {
                         actions.enable();
@@ -330,8 +387,9 @@
                 })
             },
             onClick: function (data, actions) {
-                if (document.getElementById('email2').value == "") {
-                    alert("Please fill in the email address");
+                if (document.getElementById('lotteryEmail').value == "") {
+                    document.getElementById('lotteryEmailError').style.visibility = "visible";
+                    // alert("Please fill in the email address");
                 }
             },
             createOrder: function (data, actions) {
@@ -384,7 +442,7 @@
                 return actions.order.capture().then(function (details) {
                     var id = details.id;
                     var orderType = "lottery";
-                    var email = document.getElementById("email2").value;
+                    var email = document.getElementById("lotteryEmail").value;
                     fetch(`/captureOrder?id=${id}&orderType=${orderType}&email=${email}`, {}).then(function () {
                         // alert("You have made the transaction. Thank you for your support !");
                         window.location.reload();
@@ -403,17 +461,17 @@
                     alert("There was an error in payment, please try again !");
                 });
             }
-        }).render('#paypal-button-container');
+        }).render('#paypal-button-container1');
     }
 
-    initPayPalButton();
+    initPayPalButton1();
 </script>
 
 <script>
     function initPayPalButton2() {
-        var description = document.querySelector('#smart-button-container2 #description');
+        var description = document.querySelector('#fundraisingRemarks');
         var amount = document.querySelector('#smart-button-container2 #amount');
-        var descriptionError = document.querySelector('#smart-button-container2 #descriptionError');
+        var descriptionError = document.querySelector('#fundraisingRemarksError');
         var priceError = document.querySelector('#smart-button-container2 #priceLabelError');
         // var invoiceid = document.querySelector('#smart-button-container2 #invoiceid');
         // var invoiceidError = document.querySelector('#smart-button-container2 #invoiceidError');
@@ -523,52 +581,6 @@
     }
 
     initPayPalButton2();
-</script>
-
-<!--
-  Create a Twitch.Embed object that will render
-  within the "twitch-embed" root element.
--->
-
-<script src="https://embed.twitch.tv/embed/v1.js"></script>
-
-<script type="text/javascript">
-    var embed = new Twitch.Embed("twitch-embed", {
-        width: "100%",
-        height: 480,
-        channel: "monstercat",
-        layout: "video-with-chat",
-        autoplay: true,
-        // only needed if your site is also embedded on embed.example.com and othersite.example.com
-        parent: ["xclass.highspeed.vip"]
-    });
-
-    embed.addEventListener(Twitch.Embed.VIDEO_READY, () => {
-        var player = embed.getPlayer();
-        player.play();
-    });
-</script>
-
-<script>
-    function countDown(times) {
-        var timer = setInterval(function () {
-            if (times <= 0) {
-                document.getElementById("vote").innerHTML = "Submit";
-                document.getElementById("vote").disabled = false;
-                clearInterval(timer);
-                return;
-            }
-            var h = parseInt(times / 60 / 60);
-            h = h < 10 ? '0' + h : h;
-            var m = parseInt(times / 60 % 60);
-            m = m < 10 ? '0' + m : m;
-            var s = parseInt(times % 60);
-            s = s < 10 ? '0' + s : s;
-            times = times - 1;
-            var temp = "" + h + " : " + m + " : " + s;
-            document.getElementById("vote").innerHTML = temp;
-        }, 1000);
-    }
 </script>
 
 </body>

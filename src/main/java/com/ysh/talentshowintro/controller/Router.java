@@ -49,7 +49,7 @@ public class Router {
                 names.add(name);
             }
         }
-        String email = req.getParameter("email1");
+        String email = req.getParameter("voteEmail");
         int votesPerPerson = Integer.valueOf(appParamService.getAppParamByKey("votesPerPerson"));
         if (names.size() > votesPerPerson) {
             try {
@@ -436,7 +436,7 @@ public class Router {
                     ticketService.save(ticket);
                     tickets.add(ticket);
                 }
-                mailQueueService.addMail(StringUtils.isNull(email), null, null, "Ticket Receipt", "sendVoteMail", tickets, null);
+                mailQueueService.addMail(StringUtils.isNull(email), null, null, "Ticket Receipt", "sendBallotMail", tickets, null);
             } else if ("fundraising".equals(orderType)) {
                 message.setSubject("Fundraising");
                 message.setMessage(description);
