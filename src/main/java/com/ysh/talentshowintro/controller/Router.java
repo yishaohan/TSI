@@ -438,6 +438,7 @@ public class Router {
                 }
                 mailQueueService.addMail(StringUtils.isNull(email), null, null, "Ticket Receipt", "sendBallotMail", tickets, null);
             } else if ("fundraising".equals(orderType)) {
+                req.getSession().setAttribute("isDonate", "true");
                 message.setSubject("Fundraising");
                 message.setMessage(description);
                 messageService.save(message);

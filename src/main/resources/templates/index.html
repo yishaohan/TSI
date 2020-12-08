@@ -20,8 +20,10 @@
     <link rel="icon" href="../favicon.ico" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{/bootstrap/css/bootstrap.css}">
-    <link rel="stylesheet" href="../static/bootstrap/iconfont/iconfont.css" th:href="@{/bootstrap/iconfont/iconfont.css}">
-    <script src="../static/bootstrap/js/jquery-3.5.1.slim.min.js" th:src="@{/bootstrap/js/jquery-3.5.1.slim.min.js}"></script>
+    <link rel="stylesheet" href="../static/bootstrap/iconfont/iconfont.css"
+          th:href="@{/bootstrap/iconfont/iconfont.css}">
+    <script src="../static/bootstrap/js/jquery-3.5.1.slim.min.js"
+            th:src="@{/bootstrap/js/jquery-3.5.1.slim.min.js}"></script>
     <script src="../static/bootstrap/js/popper.min.js" th:src="@{/bootstrap/js/popper.min.js}"></script>
     <script src="../static/bootstrap/js/bootstrap.js" th:src="@{/bootstrap/js/bootstrap.js}"></script>
     <script>
@@ -61,7 +63,8 @@
 <body th:onload="${second > 0 } ? 'javascript:countDown('+${second}+');': ''">
 <div name="banner" class="container-fluid w-100 px-0" style="height: 200px;background-color: #F0F0F0;">
     <div class="row mx-0 align-items-center justify-content-center h-100">
-        <img class="w-80" src="../static/image/TalentShow2020.png" th:src="@{/image/TalentShow2020.png}" style="max-width: 350px;">
+        <img class="w-80" src="../static/image/TalentShow2020.png" th:src="@{/image/TalentShow2020.png}"
+             style="max-width: 350px;">
     </div>
 </div>
 <div name="context" class="container">
@@ -86,30 +89,43 @@
                 <div name="lottery" class="row w-100 m-auto justify-content-center">
                     <div class="col-md-6">
                         <div name="lotteryImage" class="row justify-content-center mt-1">
-                            <img class="w-50" src="../static/image/ticket.jpeg" th:src="@{/image/ticket.jpeg}" alt="...">
+                            <img class="w-50" src="../static/image/ticket.jpeg" th:src="@{/image/ticket.jpeg}"
+                                 alt="...">
                         </div>
                         <div name="lotteryDescription" class="mt-3">
                             <h5 class="">50/50 tickets</h5>
-                            <p class="">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <p class="">Winner of this lottery gets half of the funds raised for the entire show.
+                                Results will be announced before the winners of the show are announced.
+                            </p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div name="lotteryEmailParent" class="form-group">
-                            <small name="lotteryEmailError" id="lotteryEmailError" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please enter your email</small>
-                            <input name="lotteryEmail" id="lotteryEmail" type="email" class="form-control form-control-sm" placeholder="Please enter your email">
+                            <small name="lotteryEmailError" id="lotteryEmailError"
+                                   class="alert alert-danger form-text text-center my-1 py-0"
+                                   style="visibility: hidden;">Please enter your email</small>
+                            <input name="lotteryEmail" id="lotteryEmail" type="email"
+                                   class="form-control form-control-sm" placeholder="Please enter your email">
                             <small class="form-text text-muted">We'll never share your email with anyone.</small>
                         </div>
                         <div name="lotteryTickets" class="my-3" th:remove="${session.tickets !=null } ? none : all">
-                            <button class="btn btn-success btn-sm rounded-pill w-100" data-toggle="collapse" data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">show ticket number</button>
+                            <button class="btn btn-success btn-sm rounded-pill w-100" data-toggle="collapse"
+                                    data-target="#tickets" th:text="|You have ${session.tickets.size()} tickets|">show
+                                ticket number
+                            </button>
                             <div class="collapse my-3" id="tickets">
-                                <div class="d-block card card-body text-center mb-3 border-warning px-0" th:each="ticket : ${session.tickets}" style="background-image: url('/image/lotteryBackground.png');background-repeat: no-repeat;background-size: auto 100%;border-width: medium;">
+                                <div class="d-block card card-body text-center mb-3 border-warning px-0"
+                                     th:each="ticket : ${session.tickets}"
+                                     style="background-image: url('/image/lotteryBackground.png');background-repeat: no-repeat;background-size: auto 100%;border-width: medium;">
                                 <span class="" th:each="i:${#numbers.sequence(0,5)}">
-                                    <span th:class="|text-danger iconfont icon-shuzi${#strings.substring(ticket.getNumber(), i, i+1 )}|" style="font-size: x-large;"></span>
+                                    <span th:class="|text-danger iconfont icon-shuzi${#strings.substring(ticket.getNumber(), i, i+1 )}|"
+                                          style="font-size: x-large;"></span>
                                 </span>
                                 </div>
                             </div>
                         </div>
-                        <div name="smart-button-container1" id="smart-button-container1" class="" style="margin-top: 43px;">
+                        <div name="smart-button-container1" id="smart-button-container1" class=""
+                             style="margin-top: 43px;">
                             <div style="text-align: center;">
                                 <div style="margin-bottom: 1.25rem;">
                                     <select id="item-options">
@@ -152,25 +168,34 @@
                         </div>
                         <div name="fundraisingDescription" class="mt-3">
                             <h5 class="">Donate</h5>
-                            <p class="">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <p class="">No fixed amount required. We are incredibly grateful for your support!</p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div name="fundraisingRemarksParent" class="form-group">
-                            <small name="fundraisingRemarksError" id="fundraisingRemarksError" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please enter a description</small>
-                            <input name="fundraisingRemarks" id="fundraisingRemarks" class="form-control form-control-sm" type="text" maxlength="127" value="" placeholder="">
+                            <small name="fundraisingRemarksError" id="fundraisingRemarksError"
+                                   class="alert alert-danger form-text text-center my-1 py-0"
+                                   style="visibility: hidden;">Please enter a description</small>
+                            <input name="fundraisingRemarks" id="fundraisingRemarks"
+                                   class="form-control form-control-sm" type="text" maxlength="127" value=""
+                                   placeholder="">
                             <small class="form-text text-muted">Please enter a description</small>
                         </div>
-                        <div name="donations" class="my-3" th:remove="${session.donations !=null } ? none : all">
-                            <button class="btn btn-success btn-sm rounded-pill w-100" th:text="|Thank you for the ${session.donations.size()} donation|">Thank you for your donation</button>
+                        <div name="donations" class="my-3" th:remove="${session.isDonate != null} ? none : all">
+                            <button class="btn btn-success btn-sm rounded-pill w-100"
+                                    th:text="'Thank you for your donation!'">Thank you for
+                                your donation
+                            </button>
                         </div>
                         <div name="smart-button-container2" id="smart-button-container2" class="">
                             <div class="form-group mb-0">
                             </div>
                             <div class="form-group">
-                                <small class="alert alert-danger form-text mt-1 mb-1 py-0 text-center" id="priceLabelError" style="visibility: hidden;">Please enter a price</small>
+                                <small class="alert alert-danger form-text mt-1 mb-1 py-0 text-center"
+                                       id="priceLabelError" style="visibility: hidden;">Please enter a price</small>
                                 <div class="input-group input-group-sm" style="text-align: center">
-                                    <input class="form-control" name="amountInput" type="number" id="amount" placeholder="Fundraising amount" value="">
+                                    <input class="form-control" name="amountInput" type="number" id="amount"
+                                           placeholder="Fundraising amount" value="">
                                     <div class="input-group-append">
                                         <span class="input-group-text">CAD</span>
                                     </div>
@@ -186,19 +211,34 @@
         </div>
     </div>
     <div name="candidate" class="card-group">
+        <div class="row w-100 justify-content-center text-center">
+            <div class="col-12">
+                <h3 class="w-100">Voting</h3>
+                <p class="">Vote for your TOP THREE performances during the 5 minute voting period after all acts are done. Please use a valid email address.
+                </p>
+                <div th:if="${param.error!=null}" th:text="${param.error}" class="alert alert-danger rounded-pill" role="alert">
+                    A simple danger alert—check it out!
+                </div>
+                <div th:if="${param.message!=null}" class="alert alert-success rounded-pill mb-3"
+                     th:text="${param.message} ? ${param.message} : ''">Thank you !</div>
+            </div>
+        </div>
         <form action="/vote" method="post">
             <div class="row w-100" style="height: 580px;">
                 <div class="col-md-4 mb-3">
                     <div class="card border-success h-100">
                         <div class="card-header" style="background-color: #F0F0F0">Alina</div>
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg"
+                             th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text">
+                                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
                             <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Alina</label>
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
+                                    for Alina</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <input class="checkbox" type="checkbox" name="vote1" value="Alina">
@@ -211,14 +251,17 @@
                 <div class="col-md-4 mb-3">
                     <div class="card border-success h-100">
                         <div class="card-header" style="background-color: #F0F0F0">Anna</div>
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg"
+                             th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text">
+                                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
                             <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Anna</label>
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
+                                    for Anna</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <input class="checkbox" type="checkbox" name="vote2" value="Anna">
@@ -231,14 +274,17 @@
                 <div class="col-md-4 mb-3">
                     <div class="card border-success h-100">
                         <div class="card-header" style="background-color: #F0F0F0">Jason</div>
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg"
+                             th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text">
+                                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
                             <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Jason</label>
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
+                                    for Jason</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <input class="checkbox" type="checkbox" name="vote3" value="Jason">
@@ -252,18 +298,21 @@
             <div class="row w-100" style="height: 580px;">
                 <div class="col-md-4 mb-3">
                     <div class="card border-success h-100">
-                        <div class="card-header" style="background-color: #F0F0F0">Alina1</div>
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-header" style="background-color: #F0F0F0">Paul</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg"
+                             th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text">
+                                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
                             <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Alina1</label>
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
+                                    for Paul</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote4" value="Alina1">
+                                        <input class="checkbox" type="checkbox" name="vote4" value="Paul">
                                     </div>
                                 </div>
                             </div>
@@ -272,18 +321,21 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="card border-success h-100">
-                        <div class="card-header" style="background-color: #F0F0F0">Anna1</div>
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-header" style="background-color: #F0F0F0">Roxana</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg"
+                             th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text">
+                                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
                             <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Anna1</label>
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
+                                    for Roxana</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote5" value="Anna1">
+                                        <input class="checkbox" type="checkbox" name="vote5" value="Roxana">
                                     </div>
                                 </div>
                             </div>
@@ -292,18 +344,21 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <div class="card border-success h-100">
-                        <div class="card-header" style="background-color: #F0F0F0">Jason1</div>
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
+                        <div class="card-header" style="background-color: #F0F0F0">Steven</div>
+                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg"
+                             th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+                            <p class="card-text">
+                                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
                             <p class="card-text"><small class="text-muted">xxxxxxxxxxxxxxxxxxx</small></p>
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Jason1</label>
+                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
+                                    for Steven</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote6" value="Jason1">
+                                        <input class="checkbox" type="checkbox" name="vote6" value="Steven">
                                     </div>
                                 </div>
                             </div>
@@ -312,14 +367,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <small name="voteCheckError1" id="voteCheckError1" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please choose a candidate !</small>
-                <small name="voteEmailError1" id="voteEmailError1" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please enter your email</small>
-                <small name="voteEmailError2" id="voteEmailError2" class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Email format is incorrect !</small>
-                <input type="email" required class="form-control form-control-sm" name="voteEmail" id="voteEmail" placeholder="Please enter your email">
+                <small name="voteCheckError1" id="voteCheckError1"
+                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please
+                    choose a candidate !</small>
+                <small name="voteEmailError1" id="voteEmailError1"
+                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please
+                    enter your email</small>
+                <small name="voteEmailError2" id="voteEmailError2"
+                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Email
+                    format is incorrect !</small>
+                <input type="email" required class="form-control form-control-sm" name="voteEmail" id="voteEmail"
+                       placeholder="Please enter your email">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
             </div>
             <div class="row w-100">
-                <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
+                <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'"
+                        th:text="${second >0} ? 'Please wait ...': 'Submit'"
+                        class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
             </div>
         </form>
     </div>
@@ -341,7 +405,7 @@
     var embed = new Twitch.Embed("twitch-embed", {
         width: "100%",
         height: 480,
-        channel: "monstercat",
+        channel: "Impact_Initiative",
         layout: "video-with-chat",
         autoplay: true,
         // only needed if your site is also embedded on embed.example.com and othersite.example.com
@@ -355,7 +419,8 @@
 </script>
 
 <script
-        src="https://www.paypal.com/sdk/js?client-id=AYsnjLgEmwy2RIhy0QdO335NCySWCFKnxecxVmVhTVUxLE8hdw_ZNs1LvGD5sH61BErt2JxRuTc7I9Pn&currency=CAD" data-sdk-integration-source="button-factory">
+        src="https://www.paypal.com/sdk/js?client-id=AViXcCKHnqll0J1Lh6mZNFeZ626CepBfscyBpuhV3jed0e8ZCvcMzP4n10eB2qx_gKtSfoZYxMOQgb1y&currency=CAD"
+        data-sdk-integration-source="button-factory">
 </script>
 
 <script>
