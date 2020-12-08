@@ -58,7 +58,7 @@
 
     </script>
 </head>
-<body class="">
+<body th:onload="${second > 0 } ? 'javascript:countDown('+${second}+');': ''">
 <div name="banner" class="container-fluid w-100 px-0" style="height: 200px;background-color: #F0F0F0;">
     <div class="row mx-0 align-items-center justify-content-center h-100">
         <img class="w-80" src="../static/image/TalentShow2020.png" th:src="@{/image/TalentShow2020.png}" style="max-width: 350px;">
@@ -583,6 +583,28 @@
     }
 
     initPayPalButton2();
+</script>
+
+<script>
+    function countDown(times) {
+        var timer = setInterval(function () {
+            if (times <= 0) {
+                document.getElementById("vote").innerHTML = "Submit";
+                document.getElementById("vote").disabled = false;
+                clearInterval(timer);
+                return;
+            }
+            var h = parseInt(times / 60 / 60);
+            h = h < 10 ? '0' + h : h;
+            var m = parseInt(times / 60 % 60);
+            m = m < 10 ? '0' + m : m;
+            var s = parseInt(times % 60);
+            s = s < 10 ? '0' + s : s;
+            times = times - 1;
+            var temp = "" + h + " : " + m + " : " + s;
+            document.getElementById("vote").innerHTML = temp;
+        }, 1000);
+    }
 </script>
 
 </body>
