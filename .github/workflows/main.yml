@@ -1,4 +1,4 @@
-name: CI-xClass
+name: CI-IMPACT
 
 on:
     push:
