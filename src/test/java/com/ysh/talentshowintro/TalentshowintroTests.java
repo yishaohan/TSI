@@ -29,7 +29,7 @@ class TalentshowintroTests {
     void contextLoads() {
     }
 
-    @Test
+    //    @Test
     void mailSend() {
         sendMailTask.sendMail();
     }
