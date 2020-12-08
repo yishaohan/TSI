@@ -31,19 +31,19 @@ class TalentshowintroTests {
 
     //    @Test
     void mailSend() {
-        sendMailTask.sendMail();
+//        sendMailTask.sendMail();
     }
 
     //    @Test
     void paypal() throws Exception {
-        OrdersGetRequest request = new OrdersGetRequest("59L40591CR683515R");
-        HttpResponse<Order> response = Credentials.paypalClient.execute(request);
-        Order order = ((Order) response.result());
-        System.out.println(new JSONObject(new Json().serialize(response.result())).toString(4));
+//        OrdersGetRequest request = new OrdersGetRequest("59L40591CR683515R");
+//        HttpResponse<Order> response = Credentials.paypalClient.execute(request);
+//        Order order = ((Order) response.result());
+//        System.out.println(new JSONObject(new Json().serialize(response.result())).toString(4));
     }
 
     //    @Test
     public void test() {
-        System.out.println(ticketService.getTicketByID(70));
+//        System.out.println(ticketService.getTicketByID(70));
     }
 }
