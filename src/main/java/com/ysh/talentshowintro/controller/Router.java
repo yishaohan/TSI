@@ -6,6 +6,7 @@ import com.ysh.talentshowintro.model.*;
 import com.ysh.talentshowintro.paypal.Credentials;
 import com.ysh.talentshowintro.service.*;
 import com.ysh.talentshowintro.utils.StringUtils;
+import com.ysh.talentshowintro.utils.VerifyCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -45,6 +48,7 @@ public class Router {
         List<String> names = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             String name = req.getParameter("vote" + i);
+            System.out.println(name);
             if (name != null) {
                 names.add(name);
             }
@@ -144,7 +148,22 @@ public class Router {
         Timestamp currentDateTime = new Timestamp(Calendar.getInstance(TimeZone.getTimeZone("America/Vancouver")).getTime().getTime());
         long second = (startDateTime.getTime() - currentDateTime.getTime()) / 1000;
         mv.addObject("second", second);
+        mv.addObject("ifVerify", Boolean.parseBoolean(appParamService.getAppParamByKey("enableVerificationCode")));
+
+        //////////////////////////////
+        List<Candidate> listOfCandidates = candidateService.getAllCandidates();
+        mv.addObject("candidates", listOfCandidates);
         return mv;
+    }
+
+    @GetMapping("/verifyCode")
+    public void code(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        VerifyCode vc = new VerifyCode();
+        BufferedImage image = vc.getImage();
+        String verifyCode = vc.getText();
+        HttpSession session = req.getSession();
+        session.setAttribute("verifyCode", verifyCode);
+        VerifyCode.output(image, resp.getOutputStream());
     }
 
     @GetMapping("/admin")

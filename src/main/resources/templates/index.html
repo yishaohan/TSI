@@ -16,7 +16,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Talent Show 2020 | TEST</title>
+    <title>Talent Show 2020</title>
     <link rel="icon" href="../favicon.ico" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
     <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css" th:href="@{/bootstrap/css/bootstrap.css}">
@@ -224,127 +224,26 @@
                 </div>
             </div>
         </div>
-        <form action="/vote" method="post">
+        <form action="/vote" method="post" class="w-100">
             <div class="row w-100 mx-0 justify-content-center">
-                <div class="col-lg-6 mb-3" style="">
+                <div th:each="candidate : ${candidates}" class="col-md-6 mb-3" style="">
                     <div class="card h-100">
-                        <!--                        <div class="card-header" style="background-color: #F0F0F0">Alina</div>-->
-                        <!--                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">-->
-                        <iframe style="min-height: 250px;" class="" src="https://www.youtube.com/embed/MPbUaIZAaeA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe style="min-height: 250px;" class="" th:src="${candidate.getYoutubeLink()}"
+                                src="https://www.youtube.com/embed/MPbUaIZAaeA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                            <p class="card-text" th:text="${candidate.getProfile()}">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                            </p>
                         </div>
                         <div class="card-footer border-0 bg-transparent">
                             <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote for Alina</label>
+                                <label class="form-control text-center" style="background-color: #F0F0F0;"
+                                       th:text = "${'Please vote for ' + candidate.getName()}">Please
+                                    vote for Alina</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote1" value="Alina">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-3" style="">
-                    <div class="card h-100">
-                        <!--                        <div class="card-header" style="background-color: #F0F0F0">Anna</div>-->
-                        <!--                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">-->
-                        <iframe style="min-height: 250px;" class="" src="https://www.youtube.com/embed/MPbUaIZAaeA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
-                        </div>
-                        <div class="card-footer border-0 bg-transparent">
-                            <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
-                                    for Anna</label>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote2" value="Anna">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row w-100 mx-0 justify-content-center">
-                <div class="col-lg-6 mb-3" style="">
-                    <div class="card h-100">
-                        <!--                        <div class="card-header" style="background-color: #F0F0F0">Jason</div>-->
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
-                        </div>
-                        <div class="card-footer border-0 bg-transparent">
-                            <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
-                                    for Jason</label>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote3" value="Jason">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-3" style="">
-                    <div class="card h-100">
-                        <!--                        <div class="card-header" style="background-color: #F0F0F0">Paul</div>-->
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
-                        </div>
-                        <div class="card-footer border-0 bg-transparent">
-                            <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
-                                    for Paul</label>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote4" value="Paul">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row w-100 mx-0 justify-content-center">
-                <div class="col-lg-6 mb-3" style="">
-                    <div class="card h-100">
-                        <!--                        <div class="card-header" style="background-color: #F0F0F0">Roxana</div>-->
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
-                        </div>
-                        <div class="card-footer border-0 bg-transparent">
-                            <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
-                                    for Roxana</label>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote5" value="Roxana">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-3" style="">
-                    <div class="card h-100">
-                        <!--                        <div class="card-header" style="background-color: #F0F0F0">Steven</div>-->
-                        <img class="card-img-top" src="../static/image/candidate/candidate1.jpg" th:src="@{/image/candidate/candidate1.jpg}" alt="Card image cap">
-                        <div class="card-body">
-                            <p class="card-text">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
-                        </div>
-                        <div class="card-footer border-0 bg-transparent">
-                            <div class="input-group input-group-sm">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;">Please vote
-                                    for Steven</label>
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input class="checkbox" type="checkbox" name="vote6" value="Steven">
+                                        <input class="checkbox" type="checkbox" th:name="${'vote'+candidate.getId()}" name="vote1"
+                                               th:value="${candidate.getName()}"
+                                               value="Alina">
                                     </div>
                                 </div>
                             </div>
@@ -361,6 +260,15 @@
                        class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Email format is incorrect !</small>
                 <input type="email" required class="form-control form-control-sm" name="voteEmail" id="voteEmail" placeholder="Please enter your email">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
+                <div th:if="${ifVerify}" class="row mt-1">
+                    <div class="input-group-sm col-9">
+                        <input type="text" class="form-control" name="verifyCode" placeholder="Verify Code">
+                    </div>
+                    <div class="col-3">
+                        <img class="rounded-pill" src="/verifyCode" onclick="this.src='/verifyCode'"
+                             style="cursor:pointer;min-width: 75px;" alt="Verify Code"/>
+                    </div>
+                </div>
                 <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
             </div>
         </form>
@@ -368,7 +276,8 @@
 </div>
 
 <div name="footer" class="container-fluid mt-5" style="height: 50px;background-color: #F0F0F0;">
-    <div class="row mx-0 align-items-center justify-content-center h-100 small text-muted">Copyright &copy;1996 All rights reserved to K&C Academy</div>
+    <div class="row mx-0 align-items-center justify-content-center h-100 small text-muted">Copyright &copy;2020 All
+        rights reserved to Impact Initiative</div>
 </div>
 <!--
   Create a Twitch.Embed object that will render
