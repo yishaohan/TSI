@@ -146,7 +146,7 @@
 
     </style>
 </head>
-<body th:onload="${second > 0 } ? 'javascript:countDown('+${second}+');': ''">
+<body th:onload="'javascript:countDown('+${second}+');'">
 <div name="banner" class="container-fluid w-100" style="height: 200px;background-color: #F0F0F0;">
     <div class="row mx-0 align-items-center justify-content-center h-100">
         <img class="w-80" src="../static/image/TalentShow2020.png" th:src="@{/image/TalentShow2020.png}"
@@ -310,9 +310,9 @@
                 </div>
             </div>
         </div>
-        <form action="/vote" method="post" class="w-100">
-            <div class="row w-100 mx-0 justify-content-center">
-                <div th:each="candidate : ${candidates}" class="col-md-6 mb-3 vote" style="">
+        <form action="/vote" method="post" class="w-100" >
+            <div class="row w-100 mx-0 justify-content-center" id="votingSection" style="display: none;">
+                <div th:each="candidate : ${candidates}" class="col-md-6 mb-3 vote">
                     <div class="card h-100">
                         <iframe style="min-height: 250px;" class="" th:src="${candidate.getYoutubeLink()}"
                                 src="https://www.youtube.com/embed/MPbUaIZAaeA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -629,6 +629,7 @@
             if (times <= 0) {
                 document.getElementById("vote").innerHTML = "Submit";
                 document.getElementById("vote").disabled = false;
+                document.getElementById("votingSection").style.display = "flex";
                 clearInterval(timer);
                 return;
             }
