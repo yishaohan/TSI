@@ -110,6 +110,7 @@
                 transform: rotate(2deg);
             }
         }
+
         @keyframes shake-bottom {
             0%,
             100% {
@@ -170,7 +171,7 @@
                 </li>
             </ul>
         </div>
-        <div class="tab-content w-100" id="myTabContent">
+        <div class="tab-content w-100 mb-4" id="myTabContent" >
             <div class="tab-pane fade show active w-100" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div name="lottery" class="row w-100 m-auto justify-content-center">
                     <div class="col-md-6">
@@ -248,16 +249,17 @@
             </div>
             <div class="tab-pane fade w-100" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                 <div name="fundraising" class="row m-auto w-100 justify-content-center">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div name="fundraisingImage" class="row justify-content-center mt-1">
-                            <img class="" src="../static/image/donate.png" th:src="@{/image/donate.png}" style="max-width: 180px;">
+                            <img class="" src="../static/image/donate.png" th:src="@{/image/donate.png}"
+                                 style="max-width: 180px;">
                         </div>
                         <div name="fundraisingDescription" class="mt-3">
                             <h5 class="">Donate</h5>
                             <p class="">No fixed amount required. We are incredibly grateful for your support!</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div name="fundraisingRemarksParent" class="form-group">
                             <small name="fundraisingRemarksError" id="fundraisingRemarksError"
                                    class="alert alert-danger form-text text-center my-1 py-0"
@@ -292,6 +294,10 @@
                             <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container2"></div>
                         </div>
                     </div>
+                    <div class="col-md-4 text-center">
+                        <h4>微信支付</h4>
+                        <img th:src="@{/image/wechatPay.png}" src="../static/image/wechatPay.png">
+                    </div>
                 </div>
             </div>
         </div>
@@ -300,9 +306,11 @@
         <div class="row w-100 justify-content-center text-center mx-0">
             <div class="col-12">
                 <h3 class="w-100">Voting</h3>
-                <p class="text-muted small">Vote for your TOP THREE performances during the 5 minute voting period after all acts are done. Please use a valid email address.
+                <p class="text-muted small">Vote for your TOP THREE performances during the 5 minute voting period after
+                    all acts are done. Please use a valid email address.
                 </p>
-                <div th:if="${param.error!=null}" th:text="${param.error}" class="alert alert-danger rounded-pill" role="alert">
+                <div th:if="${param.error!=null}" th:text="${param.error}" class="alert alert-danger rounded-pill"
+                     role="alert">
                     A simple danger alert—check it out!
                 </div>
                 <div th:if="${param.message!=null}" class="alert alert-success rounded-pill mb-3"
@@ -310,20 +318,25 @@
                 </div>
             </div>
         </div>
-        <form action="/vote" method="post" class="w-100" >
+        <form action="/vote" method="post" class="w-100">
             <div class="row w-100 mx-0 justify-content-center" id="votingSection" style="display: none;">
                 <div th:each="candidate : ${candidates}" class="col-md-6 mb-3 vote">
                     <div class="card h-100">
                         <iframe style="min-height: 250px;" class="" th:src="${candidate.getYoutubeLink()}"
-                                src="https://www.youtube.com/embed/MPbUaIZAaeA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                src="https://www.youtube.com/embed/MPbUaIZAaeA" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
                         <div class="card-body">
-                            <p class="card-text" th:text="${candidate.getProfile()}">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                            <p class="card-text" th:text="${candidate.getProfile()}">
+                                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                             </p>
                         </div>
                         <div class="card-footer border-0 bg-transparent">
                             <div class="input-group input-group-sm  voteBox">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;cursor: pointer"
-                                       th:text = "${'Please vote for ' + candidate.getName()}" th:for="${'vote'+candidate.getId()}" for="vote1">Please
+                                <label class="form-control text-center"
+                                       style="background-color: #F0F0F0;cursor: pointer"
+                                       th:text="${'Please vote for ' + candidate.getName()}"
+                                       th:for="${'vote'+candidate.getId()}" for="vote1">Please
                                     vote for Alina</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
@@ -341,12 +354,16 @@
             </div>
             <div class="form-group">
                 <small name="voteCheckError1" id="voteCheckError1"
-                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please choose a candidate !</small>
+                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please
+                    choose a candidate !</small>
                 <small name="voteEmailError1" id="voteEmailError1"
-                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please enter your email</small>
+                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Please
+                    enter your email</small>
                 <small name="voteEmailError2" id="voteEmailError2"
-                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Email format is incorrect !</small>
-                <input type="email" required class="form-control form-control-sm" name="voteEmail" id="voteEmail" placeholder="Please enter your email">
+                       class="alert alert-danger form-text text-center my-1 py-0" style="visibility: hidden;">Email
+                    format is incorrect !</small>
+                <input type="email" required class="form-control form-control-sm" name="voteEmail" id="voteEmail"
+                       placeholder="Please enter your email">
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
                 <div th:if="${ifVerify}" class="row mt-1">
                     <div class="input-group-sm col-9">
@@ -357,7 +374,9 @@
                              style="cursor:pointer;min-width: 75px;" alt="Verify Code"/>
                     </div>
                 </div>
-                <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'" th:text="${second >0} ? 'Please wait ...': 'Submit'" class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
+                <button id="vote" type="button" onclick="voted1()" th:disabled="${second >0 } ? 'true': 'false'"
+                        th:text="${second >0} ? 'Please wait ...': 'Submit'"
+                        class="btn btn-primary mt-2 w-100 btn-sm rounded-pill"></button>
             </div>
         </form>
     </div>
@@ -365,7 +384,8 @@
 
 <div name="footer" class="container-fluid mt-5" style="height: 50px;background-color: #F0F0F0;">
     <div class="row mx-0 align-items-center justify-content-center h-100 small text-muted">Copyright &copy;2020 All
-        rights reserved to Impact Initiative</div>
+        rights reserved to Impact Initiative
+    </div>
 </div>
 <!--
   Create a Twitch.Embed object that will render

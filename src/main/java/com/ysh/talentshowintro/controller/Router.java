@@ -182,6 +182,9 @@ public class Router {
         String votesPerPerson = appParamService.getAppParamByKey("votesPerPerson");
         mv.addObject("votesPerPerson", votesPerPerson);
         String enableVerificationCode = appParamService.getAppParamByKey("enableVerificationCode");
+        List<Double> amounts = orderService.getAmounts();
+        mv.addObject("ticketAmount", amounts.get(0));
+        mv.addObject("donationAmount", amounts.get(1));
         if (enableVerificationCode.equals("false")) {
             mv.addObject("enableVerificationCode", false);
         } else if (enableVerificationCode.equals("true")) {
