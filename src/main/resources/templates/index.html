@@ -322,14 +322,15 @@
                         </div>
                         <div class="card-footer border-0 bg-transparent">
                             <div class="input-group input-group-sm  voteBox">
-                                <label class="form-control text-center" style="background-color: #F0F0F0;"
-                                       th:text = "${'Please vote for ' + candidate.getName()}">Please
+                                <label class="form-control text-center" style="background-color: #F0F0F0;cursor: pointer"
+                                       th:text = "${'Please vote for ' + candidate.getName()}" th:for="${'vote'+candidate.getId()}" for="vote1">Please
                                     vote for Alina</label>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <input class="checkbox" type="checkbox"
                                                th:name="${'vote'+candidate.getId()}" name="vote1"
-                                               th:value="${candidate.getName()}"
+                                               th:value="${candidate.getName()}" th:id="${'vote'+candidate.getId()}"
+                                               id="vote1"
                                                value="Alina">
                                     </div>
                                 </div>
